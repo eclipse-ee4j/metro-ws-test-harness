@@ -246,25 +246,25 @@ public class WSTestMojo extends AbstractMojo {
     @Parameter(readonly = true, defaultValue = "${project.pluginArtifactRepositories}")
     private List<ArtifactRepository> pluginRepos;
 
-    @Component
+    @Parameter(defaultValue="${project}", readonly=true)
     private ArtifactFactory artifactFactory;
 
-    @Component
+    @Parameter(defaultValue="${project}", readonly=true)
     private MavenProject project;
 
-    @Component
+    @Parameter(defaultValue="${project}", readonly=true)
     private Settings settings;
 
-    @Component
+    @Parameter(defaultValue="${project}", readonly=true)
     private ArchiverManager archiverManager;
 
-    @Component
+    @Parameter(defaultValue="${project}", readonly=true)
     private ArtifactMetadataSource mdataSource;
 
     /**
      * The entry point to Aether.
      */
-    @Component
+    @Parameter(defaultValue="${project}", readonly=true)
     private RepositorySystem repoSystem;
 
     /**
