@@ -28,10 +28,6 @@
     <name>WS Test Harness</name>
     <url>http://ws-test-harness.java.net/</url>
 
-    <properties>
-        <harness.bootstrap.version>${project.version}</harness.bootstrap.version>
-    </properties>
-
     <modules>
         <module>bootstrap</module>
         <module>core</module>

@@ -33,12 +33,20 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.xml.ws</groupId>
-            <artifactId>jaxws-api</artifactId>
+                <groupId>jakarta.xml.ws</groupId>
+                <artifactId>jakarta.xml.ws-api</artifactId>
         </dependency>
         <dependency>
-             <groupId>javax.jws</groupId>
-             <artifactId>javax.jws-api</artifactId>
+                <groupId>jakarta.jws</groupId>
+                <artifactId>jakarta.jws-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.istack</groupId>
+            <artifactId>istack-commons-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.istack</groupId>
+            <artifactId>istack-commons-test</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.metro</groupId>
@@ -71,14 +79,6 @@
         <dependency>
             <groupId>org.jvnet.hudson</groupId>
             <artifactId>commons-jelly</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.istack</groupId>
-            <artifactId>istack-commons-runtime</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.istack</groupId>
-            <artifactId>istack-commons-test</artifactId>
         </dependency>
         <dependency>
             <groupId>org.daisy.libs</groupId>
