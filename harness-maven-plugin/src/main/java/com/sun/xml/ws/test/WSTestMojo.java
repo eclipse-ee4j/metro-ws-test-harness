@@ -249,10 +249,10 @@ public class WSTestMojo extends AbstractMojo {
     @Component
     private ArtifactFactory artifactFactory;
 
-    @Component
+    @Parameter(defaultValue="${project}", readonly=true)
     private MavenProject project;
 
-    @Component
+    @Parameter(defaultValue="${settings}", readonly=true )
     private Settings settings;
 
     @Component
@@ -276,6 +276,7 @@ public class WSTestMojo extends AbstractMojo {
 
     private File imageRoot = null;
 
+    @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         File imageFolder = new File(project.getBuild().getDirectory(), "tested-image");
         try {
