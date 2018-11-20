@@ -246,25 +246,25 @@ public class WSTestMojo extends AbstractMojo {
     @Parameter(readonly = true, defaultValue = "${project.pluginArtifactRepositories}")
     private List<ArtifactRepository> pluginRepos;
 
-    @Parameter(defaultValue="${project}", readonly=true)
+    @Component
     private ArtifactFactory artifactFactory;
 
     @Parameter(defaultValue="${project}", readonly=true)
     private MavenProject project;
 
-    @Parameter(defaultValue="${project}", readonly=true)
+    @Parameter(defaultValue="${settings}", readonly=true )
     private Settings settings;
 
-    @Parameter(defaultValue="${project}", readonly=true)
+    @Component
     private ArchiverManager archiverManager;
 
-    @Parameter(defaultValue="${project}", readonly=true)
+    @Component
     private ArtifactMetadataSource mdataSource;
 
     /**
      * The entry point to Aether.
      */
-    @Parameter(defaultValue="${project}", readonly=true)
+    @Component
     private RepositorySystem repoSystem;
 
     /**
@@ -276,6 +276,7 @@ public class WSTestMojo extends AbstractMojo {
 
     private File imageRoot = null;
 
+    @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         File imageFolder = new File(project.getBuild().getDirectory(), "tested-image");
         try {
