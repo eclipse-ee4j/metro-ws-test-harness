@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -226,23 +226,14 @@ public class TestDescriptor {
 
     static {
         URL url = World.class.getResource("test-descriptor.rnc");
-        Schema d = null;
-        // if it fails, go on ... - quick fix for jigsaw runtime, relaxNG service not discovered
         try {
-            try {
-                d = new RelaxNgCompactSyntaxVerifierFactory().compileSchema(url.toExternalForm());
-            } catch (SAXParseException e) {
-                throw new Error("unable to parse test-descriptor.rnc at line " + e.getLineNumber(), e);
-            } catch (Exception e) {
-                throw new Error("unable to parse test-descriptor.rnc", e);
-            }
-        } catch (Throwable t) {
-            System.out.println("ERROR INITIALIZING RELAX-NG");
-            t.printStackTrace();
+            descriptorSchema = new RelaxNgCompactSyntaxVerifierFactory().compileSchema(url.toExternalForm());
+        } catch (SAXParseException e) {
+            throw new Error("unable to parse test-descriptor.rnc at line " + e.getLineNumber(), e);
+        } catch (Exception e) {
+            throw new Error("unable to parse test-descriptor.rnc", e);
         }
-        descriptorSchema = d;
     }
-
 
     public TestDescriptor(String shortName, File home, File resources, File common, VersionProcessor applicableVersions, String description, boolean disgardWsGenOutput, boolean jdk6) {
         this.name = shortName;
@@ -523,8 +514,7 @@ public class TestDescriptor {
     private Document parse(File descriptor) throws DocumentException, SAXException, ParserConfigurationException, MalformedURLException {
         SAXParserFactory factory;
         if (descriptorSchema != null) {
-            factory = ValidatingSAXParserFactory.newInstance(descriptorSchema);
-//            factory = SAXParserFactory.newInstance();
+            factory = new ValidatingSAXParserFactory(descriptorSchema);
         } else {
             factory = SAXParserFactory.newInstance();
         }
