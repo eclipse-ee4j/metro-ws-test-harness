@@ -30,6 +30,7 @@ The project maintains the following source code repositories
 * https://github.com/eclipse-ee4j/metro-saaj
 * https://github.com/eclipse-ee4j/metro-jwsdp-samples
 * https://github.com/eclipse-ee4j/jax-rpc-ri
+* https://github.com/eclipse-ee4j/jaxr-ri
 
 ## Eclipse Contributor Agreement
 

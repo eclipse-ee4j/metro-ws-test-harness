@@ -36,6 +36,7 @@ The project maintains the following source code repositories:
 * https://github.com/eclipse-ee4j/metro-saaj
 * https://github.com/eclipse-ee4j/metro-jwsdp-samples
 * https://github.com/eclipse-ee4j/jax-rpc-ri
+* https://github.com/eclipse-ee4j/jaxr-ri
 
 ## Third-party Content
 
@@ -50,9 +51,6 @@ addressing.xml Version: 2004/10 (n/a)
 ant-launcher (1.10.2)
 
 * License: Apache-2.0 AND SAX-PD AND W3C
-* Project: https://ant.apache.org/
-* Source:
-   http://central.maven.org/maven2/org/apache/ant/ant-launcher/1.10.2/ant-launcher-1.10.2-sources.jar
 
 Apache Ant (1.6)
 
@@ -70,6 +68,22 @@ commons-logging (1.1.2)
 * Project: https://commons.apache.org/proper/commons-logging/
 * Source:
    http://central.maven.org/maven2/commons-logging/commons-logging/1.1.2/commons-logging-1.1.2-sources.jar
+
+grizzly-framework-http (1.0.40)
+
+* License: (CDDL-1.1 OR GPL-2.0 WITH Classpath-exception-2.0) AND Apache-2.0
+* Project: https://javaee.github.io/grizzly/httpserverframework.html
+* Source: https://github.com/javaee/grizzly/tree/master/modules/http
+
+jaxb2-basics (0.6.4)
+
+* License: BSD-2-Clause
+* Source: https://github.com/highsource/jaxb2-basics
+
+jaxr-impl (1.0.8)
+
+* License: CDDL-1.0
+* Project: https://www.oracle.com/technetwork/java/jaxr-138137.html
 
 JUnit (4.12)
 
@@ -120,9 +134,13 @@ relaxng-datatype (1.0)
 
 * License: New BSD license
 
+stax-utils Version: 20060502 (n/a)
+
+* License: BSD-3-Clause
+
 stax2-api (4.1)
 
-* License: Pending
+* License: BSD-3-Clause AND MIT
 * Project: https://github.com/FasterXML/stax2-api
 * Source:
    http://central.maven.org/maven2/org/codehaus/woodstox/stax2-api/4.1/stax2-api-4.1-sources.jar

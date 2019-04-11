@@ -1,0 +1,109 @@
+///////////////////////////////////////////////////////////////////////////////
+
+    Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+///////////////////////////////////////////////////////////////////////////////
+
+= JAX-WS/Metro Unit Test Harness Proposal
+:toc: left
+:toclevels: 1
+:sectnums:
+
+
+== Requirements
+
+. Writing tests shouldn't require a lot of typing and copy & pasting (there must be no boiler-plate code/configuration,
+nor duplication of data).
+. One must be able to run individual test (if necessary under a debugger) with any combination of additional
+system properties without changing any build script.
+. A failure in a test (including failure to run tools such as wscompile) must be detected, and other tests
+must not be affected by it.
+. A test must be configuration agnostic; the same test should be reusable for different containers, different transports,
+different encoding, etc.
+. Tests must be runnable in parallel to reduce turn-around time.
+. Each test must not launch new JVMs for performance as well as ease of debugging.
+. This harness may not be able to support all the existing JAX-WS unit tests; the primary goal is to provide a good test
+harness for projects building on top of JAX-WS.
+
+== User Experience
+
+A test case consists of:
+
+. metadata XML file that describes a test, such as in which versions it applies to, a test name, human-readable description, etc.
+. optional WSDL to generate server artifacts from
+. server code written in Java
+. client code written in a scripting language
+
+Thus a test case could look something like:
+
+.test.meta
+[source,xml]
+----
+<test name="simpleEchoTest" since="2.0.1">
+    <wsdl href="foo.wsdl" />
+</test>
+----
+
+.1.js
+[source,java]
+----
+r = portFoo.echo("Hello");
+assertEquals("Hello",r);
+----
+
+.EchoService.java
+[source,java]
+----
+package simpleEchoTest;
+
+@WebService
+public class EchoServiceImpl implements EchoService {
+
+    public String echo(String s) { return s; }
+}
+----
+
+Notice that the use of scripting language allows us to completely remove any boilerplate code. The harness interprets
+all the ports and injects a properly configured `portFoo` variable, as well as offer convenience methods like `assertEquals`
+(JAXB used http://www.beanshell.org/[BeanShell], which has Java-compatible syntax). There are some downsides
+(like not being able to set breakpoints inside scripts), but the experience with JAXB was that the benefits outweigh the cost.
+This also makes it easy to evolve the harness without affecting the tests that are already written.
+
+Also note that there's no build script in a test case. The harness figures out what needs to be done from the metadata.
+
+Then one would run this like this:
+
+[source]
+----
+$ alias testWs=java -jar /path/to/harness.jar
+$ testWs [... any options ...] path/to/test/case ...
+----
+
+Options would include things like what container to use (if any), # of threads to run tests, option to skip wscompile phase
+(useful for repeated runs), etc.
+
+== Issues
+
+There's a tension between inferring more by harness vs letting test code override details; Metro wants more inference
+to reduce the amount of typing, but JAX-WS RI unit tests want more overrides so that it can exercise various parts of the RI.
+The only way to solve this dilemma seems to be to have two test harnesses.
+
+So the harness itself needs to be written in a modular enough way so that two harnesses can share a large amount of code.
+
+== Implementation Consideration
+
+. Use JUnit behind the scene to run tests and tally the result. Use it smartly --- there's a lot more in JUnit
+than writing a class that extends from `TestCase` and define one method per test. For example, we should be running
+wscompile inside JUnit, and you can do those things.
+. Calling Ant tasks from Java program is pretty easy, and is a convenient way of performing some tasks from the harness.
+. Use https://codehaus-cargo.github.io/cargo/Home.html[Cargo] to make the harness container-agnostic. Do not rely on Ant for
+operations like start/stop/deploy.
+. Use https://repo1.maven.org/maven2/forehead/forehead/[forehead] or https://codehaus-plexus.github.io/plexus-classworlds/[Classworlds]
+to isolate components inside a single JVM.
+. Use https://github.com/kohsuke/parallel-junit[parallel-junit] to automatically parallelize JUnit-based tests.

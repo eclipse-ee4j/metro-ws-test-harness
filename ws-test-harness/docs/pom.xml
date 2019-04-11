@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -28,33 +28,36 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>2.0.0-RC.1</version>
+
                 <executions>
                     <execution>
-                        <id>create-docs</id>
+                        <id>output-html</id>
+                        <phase>generate-resources</phase>
                         <goals>
-                            <goal>run</goal>
+                            <goal>process-asciidoc</goal>
                         </goals>
-                        <phase>install</phase>
                         <configuration>
-                            <target>
-                                <property name="dest.dir" location="target/docs" />
-                                <!--<taskdef name="htmlmacro" classname="com.sun.wts.tools.htmlmacro.HtmlMacroTask">
-                                    <classpath>
-                                        <fileset dir="lib" includes="*.jar" />
-                                    </classpath>
-                                </taskdef>-->
-                                <mkdir dir="${dest.dir}" />
-                                <!--<htmlmacro destdir="${dest.dir}">
-                                    <documents dir="src/main/resources" includes="*.html" />
-                                </htmlmacro>-->
-                                <copy todir="${dest.dir}">
-                                    <fileset dir="src/main/resources" includes="*.png" />
-                                    <fileset dir="src/main/resources" includes="*.html" />
-                                    <fileset dir="../core/src/main/resources/com/sun/xml/ws/test" includes="*.rnc" />
-                                </copy>
-                            </target>
+                            <sourceHighlighter>coderay</sourceHighlighter>
+                            <backend>html5</backend>
+                            <doctype>book</doctype>
+                            <attributes>
+                                <linkcss>false</linkcss>
+                            </attributes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>output-docbook</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <sourceHighlighter>coderay</sourceHighlighter>
+                            <backend>docbook5</backend>
+                            <doctype>book</doctype>
                         </configuration>
                     </execution>
                 </executions>
