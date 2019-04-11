@@ -65,6 +65,10 @@
     </mailingLists>
 
     <properties>
+        <jakarta.jws-api.version>1.1.1</jakarta.jws-api.version>
+        <jakarta.xml.bind-api.version>2.3.2</jakarta.xml.bind-api.version>
+        <jakarta.xml.soap-api.version>1.4.1</jakarta.xml.soap-api.version>
+        <jakarta.xml.ws-api.version>2.3.2</jakarta.xml.ws-api.version>
         <metro.version>2.4.3</metro.version>
         <jaxws-ri.version>2.3.2</jaxws-ri.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -81,12 +85,12 @@
             <dependency>
                 <groupId>jakarta.xml.ws</groupId>
                 <artifactId>jakarta.xml.ws-api</artifactId>
-                <version>2.3.2</version>
+                <version>${jakarta.xml.ws-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.jws</groupId>
                 <artifactId>jakarta.jws-api</artifactId>
-                <version>1.1.1</version>
+                <version>${jakarta.jws-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.metro</groupId>
@@ -279,7 +283,11 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.1.0</version>
+                    <configuration>
+                        <detectJavaApiLink>false</detectJavaApiLink>
+                        <detectOfflineLinks>false</detectOfflineLinks>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

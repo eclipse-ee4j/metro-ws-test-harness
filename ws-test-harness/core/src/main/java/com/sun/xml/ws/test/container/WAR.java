@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -262,7 +262,7 @@ public final class WAR {
 
     /**
      * Copies the classpath specified by the given {@link Path}
-     * into <tt>WEB-INF/lib</tt> and <tt>WEB-INF/classes</tt>
+     * into <code>WEB-INF/lib</code> and <code>WEB-INF/classes</code>
      */
     public void copyClasspath(Realm classpath) throws Exception {
         int n = 0;
@@ -301,7 +301,7 @@ public final class WAR {
     }
 
     /**
-     * Copies resources under the directory in to <tt>WEB-INF/classes</tt>
+     * Copies resources under the directory in to <code>WEB-INF/classes</code>
      */
     public void copyResources(File resourcesDir) {
         if(resourcesDir != null) {
@@ -321,7 +321,7 @@ public final class WAR {
      * <p>
      * This is either copied from the test data (for "fromwsdl" tests),
      * or generated (for "fromjava" tests.) For fromjava tests with
-     * multiple <tt>WebService</tt> classes, you may get more than one WSDLs.
+     * multiple <code>WebService</code> classes, you may get more than one WSDLs.
      *
      * <p>
      * In a situation where there's no WSDL and just provider service,
@@ -366,7 +366,7 @@ public final class WAR {
     }
 
     /**
-     * Generates <tt>sun-web.xml</tt>
+     * Generates <code>sun-web.xml</code>
      */
     final void generateSunWebXml() throws Exception {
         Jelly jelly = new Jelly(getClass(),"jelly/sun-web.jelly");
@@ -437,7 +437,7 @@ public final class WAR {
     }
 
     /**
-     * Compiles Java source files into <tt>WEB-INF/classes</tt>.
+     * Compiles Java source files into <code>WEB-INF/classes</code>.
      */
     final void compileJavac() throws Exception {
         JavacTask javac = new JavacTask(service.parent.descriptor.javacOptions);

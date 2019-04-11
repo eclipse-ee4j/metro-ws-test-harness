@@ -34,12 +34,12 @@
 
     <dependencies>
         <dependency>
-                <groupId>jakarta.xml.ws</groupId>
-                <artifactId>jakarta.xml.ws-api</artifactId>
+            <groupId>jakarta.xml.ws</groupId>
+            <artifactId>jakarta.xml.ws-api</artifactId>
         </dependency>
         <dependency>
-                <groupId>jakarta.jws</groupId>
-                <artifactId>jakarta.jws-api</artifactId>
+            <groupId>jakarta.jws</groupId>
+            <artifactId>jakarta.jws-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.sun.istack</groupId>
@@ -160,8 +160,9 @@
                     <target>
                         <delete dir="target/surefire-reports" />
 
-                        <java classname="com.sun.xml.ws.test.Main" fork="true" classpathref="maven.test.classpath">
-                            <!--jvmarg line="-Djava.endorsed.dirs=${basedir}/target/endorsed ${harness.extra.jvm.arg}" /-->
+                        <java classname="com.sun.xml.ws.test.Main" fork="true" classpathref="maven.test.classpath" failonerror="true">
+                            <jvmarg line="${harness.extra.jvm.arg} ${harness.extra.jvm.arg.internal} -Dign=nn"/>
+                            <!--<jvmarg line="-Djava.endorsed.dirs=${basedir}/target/endorsed" />-->
                             <!--<jvmarg line="- -upgrade-module-path=${basedir}/target/endorsed ${harness.extra.jvm.arg}" />-->
                             <!--<jvmarg line="-Dharness.deploy.timeout=60000 -Dharness.useSSL=true -Dharness.ssl.home=${project.basedir}/src/test/certs" />-->
                             <!--<jvmarg line="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=6000" />-->
@@ -195,12 +196,13 @@
             <activation>
                 <property>
                     <!-- run tests using jaxws-ri -->
-                    <name>jaxws-image</name>
+                    <name>!metro-image</name>
                 </property>
             </activation>
             <properties>
                 <image>-cp:jaxws-image target/jaxws-ri-image/jaxws-ri</image>
                 <testcases>testcases/jaxws</testcases>
+                <harness.extra.jvm.arg.internal />
             </properties>
             <build>
                 <plugins>
@@ -219,21 +221,27 @@
                                     <silent>false</silent>
                                     <artifactItems>
                                         <artifactItem>
-                                            <groupId>javax.xml.bind</groupId>
-                                            <artifactId>jaxb-api</artifactId>
-                                            <version>2.2.7</version>
+                                            <groupId>jakarta.xml.bind</groupId>
+                                            <artifactId>jakarta.xml.bind-api</artifactId>
+                                            <version>${jakarta.xml.bind-api.version}</version>
                                             <type>jar</type>
                                         </artifactItem>
                                         <artifactItem>
-                                            <groupId>javax.xml.soap</groupId>
-                                            <artifactId>saaj-api</artifactId>
-                                            <version>1.3.4</version>
+                                            <groupId>jakarta.jws</groupId>
+                                            <artifactId>jakarta.jws-api</artifactId>
+                                            <version>${jakarta.jws-api.version}</version>
                                             <type>jar</type>
                                         </artifactItem>
                                         <artifactItem>
-                                            <groupId>javax.xml.ws</groupId>
-                                            <artifactId>jaxws-api</artifactId>
-                                            <version>2.2.8</version>
+                                            <groupId>jakarta.xml.soap</groupId>
+                                            <artifactId>jakarta.xml.soap-api</artifactId>
+                                            <version>${jakarta.xml.soap-api.version}</version>
+                                            <type>jar</type>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>jakarta.xml.ws</groupId>
+                                            <artifactId>jakarta.xml.ws-api</artifactId>
+                                            <version>${jakarta.xml.ws-api.version}</version>
                                             <type>jar</type>
                                         </artifactItem>
                                     </artifactItems>
@@ -282,13 +290,13 @@
             <activation>
                 <property>
                     <!-- run tests using metro -->
-                    <name>!jaxws-image</name>
+                    <name>metro-image</name>
                 </property>
             </activation>
             <properties>
                 <image>-cp:wsit-image target/metro-image/metro</image>
                 <testcases>testcases</testcases>
-                <harness.extra.jvm.arg>-DWSIT_HOME=${project.basedir}/src/test/certs</harness.extra.jvm.arg>
+                <harness.extra.jvm.arg.internal>-DWSIT_HOME=${project.basedir}/src/test/certs</harness.extra.jvm.arg.internal>
             </properties>
             <build>
                 <plugins>

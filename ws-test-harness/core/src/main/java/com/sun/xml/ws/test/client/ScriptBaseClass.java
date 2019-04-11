@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -60,7 +60,7 @@ import org.w3c.dom.Node;
  * convenience methods for scripts to use.
  *
  * <p>
- * Functions defined in <tt>util.bsh</tt> serves the same role.
+ * Functions defined in <code>util.bsh</code> serves the same role.
  *
  * @author Kohsuke Kawaguchi
  */
@@ -144,6 +144,6 @@ public class ScriptBaseClass extends Assert {
 
         return streamResult.getOutputStream().toString();
     }
-    
+
     // more to come
 }

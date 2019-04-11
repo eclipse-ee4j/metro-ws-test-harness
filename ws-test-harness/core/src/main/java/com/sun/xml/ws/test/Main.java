@@ -436,9 +436,22 @@ public class Main {
                 tool.addJar(new File(jaxwsImage, "lib/jaxb-jxc.jar"));
             }
             tool.addJar(new File(jaxwsImage, "lib/jaxb-xjc.jar"));
+            List<String> exclusionList = new ArrayList<>();
+            exclusionList.add("saaj-api.jar");
+            exclusionList.add("jaxb-api.jar");
+            exclusionList.add("jaxws-tools.jar");
+            exclusionList.add("jaxws-api.jar");
+            exclusionList.add("jaxb-jxc.jar");
+            exclusionList.add("jaxb-xjc.jar");
+            if (System.getProperty("java.endorsed.dirs") != null) {
+                // APIs should come from endorsed on JDK 8 and older
+                exclusionList.add("jakarta.jws-api.jar");
+                exclusionList.add("jakarta.xml.bind-api.jar");
+                exclusionList.add("jakarta.xml.soap-api.jar");
+                exclusionList.add("jakarta.xml.ws-api.jar");
+            }
             runtime.addJarFolder(new File(jaxwsImage, "lib"),
-                    "saaj-api.jar", "jaxb-api.jar", "jaxws-api.jar",
-                    "jaxws-tools.jar", "jaxb-jxc.jar", "jaxb-xjc.jar");
+                    exclusionList.toArray(new String[exclusionList.size()]));
 
         } else if (jaxwsWs != null) {
 

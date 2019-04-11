@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -60,12 +60,12 @@ public final class DeployedService {
     public final List<URL> clientClasspaths = new ArrayList<URL>();
 
     /**
-     * The classes that represents the generated <tt>Service</tt> classes.
+     * The classes that represents the generated <code>Service</code> classes.
      *
      * This field is populated when the service is deployed
      * and client artifacts are generated.
      *
-     * In fromjava tests with multiple <tt>@WebService</tt>, you may actually
+     * In fromjava tests with multiple <code>@WebService</code>, you may actually
      * get multiple service classes for one deployed service (argh!)
      */
     public final List<Class> serviceClass = new ArrayList<Class>();
