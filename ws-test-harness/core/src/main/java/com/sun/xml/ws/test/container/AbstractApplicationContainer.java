@@ -15,19 +15,20 @@ import com.sun.xml.ws.test.World;
 import com.sun.xml.ws.test.container.jelly.EndpointInfoBean;
 import com.sun.xml.ws.test.model.TestService;
 import com.sun.xml.ws.test.tool.WsTool;
+import com.sun.xml.ws.test.util.XMLUtil;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.dom4j.Attribute;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Base implementation of {@link ApplicationContainer}.
@@ -133,22 +134,30 @@ public abstract class AbstractApplicationContainer implements ApplicationContain
     protected void updateWsitClient(WAR war, DeployedService deployedService, String id) throws Exception {
         File wsitClientFile = new File(deployedService.getResources(), "wsit-client.xml");
         if (wsitClientFile.exists()) {
-            SAXReader reader = new SAXReader();
-            Document document = reader.read(wsitClientFile);
-            Element root = document.getRootElement();
-            Element policy = root.element("Policy");
-            Element sts = policy.element("ExactlyOne").element("All").element("PreconfiguredSTS");
+            Document document = XMLUtil.readXML(wsitClientFile, null);
+            Element root = document.getDocumentElement();
+            Element sts = XMLUtil.getElements(root, "//*[local-name()='Policy']/*[local-name()='ExactlyOne']/*[local-name()='All']/*[local-name()='PreconfiguredSTS']").get(0);
 
-            Attribute endpoint = sts.attribute("endpoint");
+            Attr  endpoint = sts.getAttributeNode("endpoint");
             endpoint.setValue(id);
 
-            Attribute wsdlLoc = sts.attribute("wsdlLocation");
-            String x = deployedService.service.wsdl.get(0).wsdlFile.toURI().toString();
-            wsdlLoc.setValue(x);
+            Attr wsdlLoc = sts.getAttributeNode("wsdlLocation");
+            wsdlLoc.setValue(deployedService.service.wsdl.get(0).wsdlFile.toURI().toString());
 
-            XMLWriter writer = new XMLWriter(new FileWriter(wsitClientFile));
-            writer.write(document);
-            writer.close();
+//            for (Element keystore : XMLUtil.getElements(root, "//*[local-name()='KeyStore']")) {
+//                Attr loc = keystore.getAttributeNode("location");
+//                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
+//            }
+//
+//            for (Element truststore : XMLUtil.getElements(root, "//*[local-name()='TrustStore']")) {
+//                Attr loc = truststore.getAttributeNode("location");
+//                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
+//            }
+
+            try (OutputStream os = new FileOutputStream(wsitClientFile)) {
+                XMLUtil.writeXML(document, os);
+                os.flush();
+            }
             war.copyWsit(wsitClientFile);
         } else {
             throw new RuntimeException("wsit-client.xml is absent. It is required. \n"

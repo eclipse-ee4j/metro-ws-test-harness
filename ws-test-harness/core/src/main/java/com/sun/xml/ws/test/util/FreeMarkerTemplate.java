@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -24,6 +24,8 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FreeMarkerTemplate {
 
@@ -31,6 +33,7 @@ public class FreeMarkerTemplate {
     String templateName;
 
     static Configuration cfg = new Configuration(Configuration.VERSION_2_3_21);
+    private static Map<String, Template> templates = new HashMap<>();
 
     static {
         cfg.setClassForTemplateLoading(FreeMarkerTemplate.class, "/com/sun/xml/ws/test/freemarker");
@@ -38,8 +41,19 @@ public class FreeMarkerTemplate {
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
     }
 
+    public FreeMarkerTemplate(String template) {
+        templateName = template;
+        if (!templates.containsKey(templateName)) {
+            try {
+                templates.put(templateName, cfg.getTemplate(templateName));
+            } catch (Throwable t) {
+                throw new RuntimeException(t);
+            }
+        }
+    }
+
     public FreeMarkerTemplate(String id, int scriptOrder, String workdir, String templateName) {
-        this.templateName = templateName;
+        this(templateName);
         root.put("serviceId", id != null ? id : "NULL");
         root.put("stage", scriptOrder);
         root.put("workdir", workdir);
@@ -47,6 +61,16 @@ public class FreeMarkerTemplate {
 
     public void put(String key, Object value) {
         root.put(key, value);
+    }
+
+    public void run(File output) throws Exception {
+        try (FileWriter out = new FileWriter(output)) {
+            Template template = templates.get(templateName);
+            template.process(root, out);
+            out.flush();
+        } catch (Throwable t) {
+            throw t;
+        }
     }
 
     public String writeFile() {
@@ -68,28 +92,13 @@ public class FreeMarkerTemplate {
         }
         System.out.println("]\n");
 
-        Writer out = null;
+        File f = new File(fullFileName);
         try {
-            Template temp = cfg.getTemplate(templateName);
-
-            /* Merge data-model with template */
-            out = new FileWriter(fullFileName);
-            temp.process(root, out);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TemplateException e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            run(f);
+        } catch (Exception t) {
+            t.printStackTrace(System.out);
         }
-        return fullFileName;
+        return f.getAbsolutePath();
     }
 
 }

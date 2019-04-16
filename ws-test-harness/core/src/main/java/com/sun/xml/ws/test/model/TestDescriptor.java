@@ -31,27 +31,29 @@ import com.sun.xml.ws.test.exec.JavaClientExecutor;
 import com.sun.xml.ws.test.exec.PrepareExecutor;
 import com.sun.xml.ws.test.model.TransportSet.Singleton;
 import com.sun.xml.ws.test.tool.WsTool;
-import com.thaiopensource.relaxng.jarv.RelaxNgCompactSyntaxVerifierFactory;
+import com.sun.xml.ws.test.util.XMLUtil;
+
 import junit.framework.TestSuite;
 import org.apache.tools.ant.types.FileSet;
-import org.dom4j.Attribute;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
-import org.iso_relax.jaxp.ValidatingSAXParserFactory;
-import org.iso_relax.verifier.Schema;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /**
  * Root object of the test model. Describes one test.
@@ -204,8 +206,6 @@ public class TestDescriptor {
      */
     public final List<String> systemProperties = new ArrayList<String>();
 
-    public static final Schema descriptorSchema;
-
     private boolean skip;
 
     private static final String JDK6_EXCLUDE_VERSION = "jdk6";
@@ -219,17 +219,6 @@ public class TestDescriptor {
     public final boolean disgardWsGenOutput;
 
     public final boolean jdk6;
-
-    static {
-        URL url = World.class.getResource("test-descriptor.rnc");
-        try {
-            descriptorSchema = new RelaxNgCompactSyntaxVerifierFactory().compileSchema(url.toExternalForm());
-        } catch (SAXParseException e) {
-            throw new Error("unable to parse test-descriptor.rnc at line " + e.getLineNumber(), e);
-        } catch (Exception e) {
-            throw new Error("unable to parse test-descriptor.rnc", e);
-        }
-    }
 
     public TestDescriptor(String shortName, File home, File resources, File common, VersionProcessor applicableVersions, String description, boolean disgardWsGenOutput, boolean jdk6) {
         this.name = shortName;
@@ -251,14 +240,16 @@ public class TestDescriptor {
      *
      * @param descriptor Test descriptor XML file.
      */
-    public TestDescriptor(File descriptor, boolean disgardWsGenOutput, boolean jdk6) throws IOException, DocumentException, ParserConfigurationException, SAXException {
+    public TestDescriptor(File descriptor, boolean disgardWsGenOutput, boolean jdk6) throws IOException, ParserConfigurationException, SAXException {
         this.disgardWsGenOutput = disgardWsGenOutput;
         this.jdk6 = jdk6;
         File testDir = descriptor.getParentFile();
-        Element root = parse(descriptor).getRootElement();
+        Element root = parse(descriptor).getDocumentElement();
 
         VersionProcessor versionProcessor;
-        this.description = root.elementTextTrim("description");
+        List<Element> list = XMLUtil.getElements(root, "/descriptor/description");
+        this.description = list.isEmpty() ? "" : list.get(0).getTextContent().trim();
+
         /*
          * Check if the resources folder exists in the dir where the
          * test-descriptor.xml is present else it is null
@@ -266,13 +257,15 @@ public class TestDescriptor {
         File resourceDir = new File(testDir, "resources");
         this.resources = resourceDir.exists() ? resourceDir : null;
 
-        for (Element xre : (List<Element>) root.elements("xml-resource")) {
+        for (Element xre : XMLUtil.getElements(root, "/descriptor/xml-resource")) {
             final XmlResource xr;
-            if (xre.attribute("href") == null)
-                xr = new InlineXmlResource((Element) xre.elements().get(0));
-            else
-                xr = new ReferencedXmlResource(new File(testDir, xre.attributeValue("href")));
-            xmlResources.put(xre.attributeValue("name"), xr);
+            final String attr = xre.getAttribute("href");
+            if (attr == null || attr.trim().isEmpty()) {
+                xr = new InlineXmlResource((Element) xre.getFirstChild());
+            } else {
+                xr = new ReferencedXmlResource(new File(testDir, attr));
+            }
+            xmlResources.put(xre.getAttribute("name"), xr);
         }
 
 
@@ -284,23 +277,24 @@ public class TestDescriptor {
         this.common = commonDir.exists() ? commonDir : null;
         this.applicableVersions = getVersionProcessor(root);
 
-        this.skip = Boolean.parseBoolean(root.attributeValue("skip"));
+        this.skip = Boolean.parseBoolean(root.getAttribute("skip"));
 
-        parseArguments(root.elementText("test-options"), testOptions);
-        parseArguments(root.elementText("wsimport-client"), wsimportClientOptions);
-        parseArguments(root.elementText("wsimport-server"), wsimportServerOptions);
-        parseArguments(root.elementText("wsgen-options"), wsgenOptions);
-        parseArguments(root.elementText("javac-options"), javacOptions);
-        parseArguments(root.elementText("system-properties"), systemProperties);
+        parseArguments(XMLUtil.getTextFrom(root, "/descriptor/test-options"), testOptions);
+        parseArguments(XMLUtil.getTextFrom(root, "/descriptor/wsimport-client"), wsimportClientOptions);
+        parseArguments(XMLUtil.getTextFrom(root, "/descriptor/wsimport-server"), wsimportServerOptions);
+        parseArguments(XMLUtil.getTextFrom(root, "/descriptor/wsgen-options"), wsgenOptions);
+        parseArguments(XMLUtil.getTextFrom(root, "/descriptor/javac-options"), javacOptions);
+        parseArguments(XMLUtil.getTextFrom(root, "/descriptor/system-properties"), systemProperties);
 
-        String transport = root.attributeValue("transport");
-        if (transport == null)
+        String transport = XMLUtil.getAttributeOrNull(root, "transport");
+        if (transport == null) {
             this.supportedTransport = TransportSet.ALL;
-        else
+        } else {
             this.supportedTransport = new Singleton(transport);
+        }
 
         this.useSet = new HashSet<String>();
-        String uses = root.attributeValue("uses");
+        String uses = XMLUtil.getAttributeOrNull(root, "uses");
         if (uses != null) {
             StringTokenizer st = new StringTokenizer(uses);
             while (st.hasMoreTokens()) {
@@ -322,23 +316,24 @@ public class TestDescriptor {
 
         this.home = descriptor.getParentFile();
 
-        this.setUpScript = root.elementText("pre-client");
+        list = XMLUtil.getElements(root, "/descriptor/pre-client");
+        // there is supposed to be at most 1 element
+        this.setUpScript = list.isEmpty() ? null : XMLUtil.getTextFrom(list.get(0));
 
-        List<Element> clientList = root.elements("client");
-        for (Element client : clientList) {
+        for (Element client : XMLUtil.getElements(root, "/descriptor/client")) {
             versionProcessor = getVersionProcessor(client);
 
-            boolean sideEffectFree = client.attribute("sideEffectFree") != null;
-            String clientTransport = client.attributeValue("transport");
+            boolean sideEffectFree = client.getAttribute("sideEffectFree") != null;
+            String clientTransport = XMLUtil.getAttributeOrNull(client, "transport");
             TransportSet clientSupportedTransport = (clientTransport == null)
                     ? TransportSet.ALL : new Singleton(clientTransport);
 
-
-            if (client.attribute("href") != null) {
+            String href = XMLUtil.getAttributeOrNull(client, "href");
+            if (href != null) {
                 // reference to script files
                 FileSet fs = new FileSet();
                 fs.setDir(testDir);
-                fs.setIncludes(client.attributeValue("href"));
+                fs.setIncludes(href);
                 for (String relPath : fs.getDirectoryScanner(World.project).getIncludedFiles()) {
                     TestClient testClient = new TestClient(this, versionProcessor, clientSupportedTransport,
                             new Script.File(new File(testDir, relPath)), sideEffectFree);
@@ -347,7 +342,7 @@ public class TestDescriptor {
             } else {
                 // literal text
                 TestClient testClient = new TestClient(this, versionProcessor, clientSupportedTransport,
-                        new Script.Inline(client.attributeValue("name"), client.getText()),
+                        new Script.Inline(client.getAttribute("name"), XMLUtil.getTextFrom(client)),
                         sideEffectFree);
                 this.clients.add(testClient);
             }
@@ -363,20 +358,17 @@ public class TestDescriptor {
         findAllJavaClients(home);
 
 
-        List<Element> serviceList = root.elements("service");
+        List<Element> serviceList = XMLUtil.getElements(root, "/descriptor/service");
         populateServices(serviceList, testDir, false);
-        List<Element> stsList = root.elements("sts");
+        List<Element> stsList = XMLUtil.getElements(root, "/descriptor/sts");
         populateServices(stsList, testDir, true);
 
 
-        List<Element> elements = root.elements("external-metadata");
-        if (elements != null) {
-            for(Element element : elements) {
-                Attribute fileAttr = element.attribute("file");
-                if (fileAttr != null) {
-                    String filepath = fileAttr.getValue();
-                    metadatafiles.add(filepath);
-                }
+        list = XMLUtil.getElements(root, "/descriptor/external-metadata");
+        for (Element element : list) {
+            String filepath = XMLUtil.getAttributeOrNull(element, "file");
+            if (filepath != null) {
+                metadatafiles.add(filepath);
             }
         }
 
@@ -507,16 +499,8 @@ public class TestDescriptor {
     /**
      * Parses a test descriptor.
      */
-    private Document parse(File descriptor) throws DocumentException, SAXException, ParserConfigurationException, MalformedURLException {
-        SAXParserFactory factory;
-        if (descriptorSchema != null) {
-            factory = new ValidatingSAXParserFactory(descriptorSchema);
-        } else {
-            factory = SAXParserFactory.newInstance();
-        }
-        factory.setNamespaceAware(true);
-        factory.setValidating(true);
-        return new SAXReader(factory.newSAXParser().getXMLReader()).read(descriptor);
+    private Document parse(File descriptor) throws ParserConfigurationException, SAXException, IOException {
+        return XMLUtil.readXML(descriptor, World.class.getResource("test-descriptor.rnc"));
     }
 
     /**
@@ -552,7 +536,7 @@ public class TestDescriptor {
 
     private void populateServices(List<Element> serviceList, File testDir, boolean isSTS) throws IOException {
         for (Element service : serviceList) {
-            String baseDir = service.attributeValue("basedir", ".");
+            String baseDir = XMLUtil.getAttributeOrDefault(service, "basedir", ".");
 
             String serviceName;
             File serviceBaseDir;
@@ -565,9 +549,10 @@ public class TestDescriptor {
             }
 
             List<WSDL> wsdlInfo = new LinkedList<WSDL>();
-            for (Element el : (List<Element>) service.elements("wsdl")) {
+            String xpath = isSTS ? "/descriptor/sts/wsdl" : "/descriptor/service/wsdl";
+            for (Element el : XMLUtil.getElements(service, xpath)) {
                 File serviceTargetDir = serviceBaseDir;
-                String wsdlAttribute = el.attributeValue("href", "test.wsdl");
+                String wsdlAttribute = XMLUtil.getAttributeOrDefault(el, "href", "test.wsdl");
                 File wsdl = parseFile(serviceTargetDir, wsdlAttribute);
                 String relLoc = null;
 
@@ -602,7 +587,7 @@ public class TestDescriptor {
             }
 
             TestService testService = new TestService(this, serviceName, serviceBaseDir, wsdlInfo, isSTS,
-                    service.attributeValue("class"));
+                    XMLUtil.getAttributeOrNull(service, "class"));
 
             File customization = parseFile(serviceBaseDir, "custom-server.xml");
             if (customization.exists()) {
@@ -621,7 +606,7 @@ public class TestDescriptor {
 
     private VersionProcessor getVersionProcessor(Element e) {
         // <client excludeFrom="jdk6" is excluded when run with -jdk6 flag
-        String excludeFrom = e.attributeValue("excludeFrom", null);
+        String excludeFrom = XMLUtil.getAttributeOrNull(e, "excludeFrom");
         if (excludeFrom != null && excludeFrom.contains(JDK6_EXCLUDE_VERSION)) {
             if (jdk6) {
                 excludeFrom = "all";
@@ -630,8 +615,8 @@ public class TestDescriptor {
             }
         }
         return new VersionProcessor(
-                e.attributeValue("since", null),
-                e.attributeValue("until", null),
+                XMLUtil.getAttributeOrNull(e, "since"),
+                XMLUtil.getAttributeOrNull(e, "until"),
                 excludeFrom);
     }
 }

@@ -86,6 +86,17 @@
                 <groupId>jakarta.xml.ws</groupId>
                 <artifactId>jakarta.xml.ws-api</artifactId>
                 <version>${jakarta.xml.ws-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>jakarta.activation</groupId>
+                        <artifactId>jakarta.activation-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.activation</groupId>
+                <artifactId>jakarta.activation</artifactId>
+                <version>1.2.1</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.jws</groupId>
@@ -145,12 +156,12 @@
             <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant</artifactId>
-                <version>1.10.2</version>
+                <version>1.10.5</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant-junit</artifactId>
-                <version>1.10.2</version>
+                <version>1.10.5</version>
             </dependency>
             <dependency>
                 <groupId>args4j</groupId>
@@ -199,14 +210,15 @@
                 <version>2.5.2</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.hudson</groupId>
-                <artifactId>commons-jelly</artifactId>
-                <version>1.1-hudson-20100305</version>
-            </dependency>
-            <dependency>
                 <groupId>org.relaxng</groupId>
                 <artifactId>jing</artifactId>
                 <version>20181222</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -303,22 +315,22 @@
         </pluginManagement>
 
         <plugins>
-                <plugin>
-                    <groupId>org.glassfish.copyright</groupId>
-                    <artifactId>glassfish-copyright-maven-plugin</artifactId>
-                    <configuration>
-                        <excludeFile>copyright-exclude</excludeFile>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>copyright-check</id>
-                            <phase>validate</phase>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
+            <plugin>
+                <groupId>org.glassfish.copyright</groupId>
+                <artifactId>glassfish-copyright-maven-plugin</artifactId>
+                <configuration>
+                    <excludeFile>copyright-exclude</excludeFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>copyright-check</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copyright</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>

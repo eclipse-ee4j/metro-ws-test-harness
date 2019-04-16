@@ -37,7 +37,7 @@ start = element descriptor {
     # transport and skipped otherwise.
     #
     # See also 'client' element's 'transport' description.
-    attribute transport {"http"|"local"}? &
+    attribute transport {"http"|"local"|"in-vm"|"lwhs"}? &
 
     attribute uses { list { ("servlet30"|"servlet"|"ri"|"multi-endpoint"|"skip-lwhs")+ } }? &
 
@@ -96,7 +96,7 @@ start = element descriptor {
         # optional transport declaration, in case a testcase requires a certain
         # kind of transport. If specified, tests will only run with the declared
         # transport and skipped otherwise.
-        attribute transport {"http"|"local"}?,
+        attribute transport {"http"|"local"|"in-vm"|"lwhs"}?,
 
         # see http://kohsuke.sfbay/hudson/job/jaxws-test-harness/ws/docs/build/index.html#Side_effect_free_tests
         attribute sideEffectFree {"true"}?,

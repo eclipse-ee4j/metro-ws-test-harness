@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<#--
 
-    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -11,22 +10,23 @@
 
 -->
 
-<j:jelly trim="false"
-    xmlns:j="jelly:core"
-    xmlns:x="jelly:xml"
-    xmlns:html="jelly:html"><endpoints xmlns='http://java.sun.com/xml/ns/jax-ws/ri/runtime' version='2.0'>
-
-<j:forEach items="${endpointInfoBeans}" var="endpoint">
+<endpoints xmlns='http://java.sun.com/xml/ns/jax-ws/ri/runtime' version='2.0'>
+<#list endpointInfoBeans as endpoint>
   <endpoint
       name="${endpoint.name}"
       implementation="${endpoint.implementation}"
-      wsdl="${endpoint.wsdl}"         
+<#if endpoint.wsdl??>
+      wsdl="${endpoint.wsdl}"
+</#if>
+<#if endpoint.service??>
       service="${endpoint.service}"
+</#if>
+<#if endpoint.port??>
       port="${endpoint.port}"
+</#if>
       url-pattern="${endpoint.urlPattern}">
     <!-- TODO: handlers -->
   </endpoint>
-</j:forEach>      
+</#list>
 
 </endpoints>
-</j:jelly>

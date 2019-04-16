@@ -32,7 +32,6 @@ import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter;
 import org.codehaus.classworlds.ClassWorld;
-import org.dom4j.DocumentException;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -463,7 +462,9 @@ public class Main {
                         : "target/classes";
 
                 runtime.addClassFolder(new File(jaxwsWs, "rt/" + classesFolder));
-                runtime.addClassFolder(new File(jaxwsWs, "rt-ha/" + classesFolder));
+                if (new File(jaxwsWs, "rt-ha/" + classesFolder).exists()) {
+                    runtime.addClassFolder(new File(jaxwsWs, "rt-ha/" + classesFolder));
+                }
                 runtime.addClassFolder(new File(jaxwsWs, "servlet/" + classesFolder));
                 runtime.addClassFolder(new File(jaxwsWs, "rt-fi/" + classesFolder));
                 runtime.addClassFolder(new File(jaxwsWs, "httpspi-servlet/" + classesFolder));
@@ -822,7 +823,7 @@ public class Main {
      * Scans the given directory, builds {@link TestDescriptor}s,
      * and schedule them to {@link TestSuite}.
      */
-    private void build(File dir, ApplicationContainer container, WsTool wsimport, TestSuite suite) throws IOException, DocumentException, ParserConfigurationException,
+    private void build(File dir, ApplicationContainer container, WsTool wsimport, TestSuite suite) throws IOException, ParserConfigurationException,
             SAXException {
         File descriptor = new File(dir, "test-descriptor.xml");
 
@@ -862,15 +863,9 @@ public class Main {
                         suite.addTest(td[1].build(container, wsimport, clientScriptName, concurrentSideEffectFree, version));
                     }
                 }
-            } catch (IOException e) {
+            } catch (IOException | ParserConfigurationException | SAXException e) {
                 // even if we fail to process this descriptor, don't let the whole thing fail.
                 // just report that failure as a test failure.
-                suite.addTest(new FailedTest("invalid descriptor", e));
-            } catch (DocumentException e) {
-                suite.addTest(new FailedTest("invalid descriptor", e));
-            } catch (ParserConfigurationException e) {
-                suite.addTest(new FailedTest("invalid descriptor", e));
-            } catch (SAXException e) {
                 suite.addTest(new FailedTest("invalid descriptor", e));
             }
             return;

@@ -1,7 +1,6 @@
-<?xml version="1.0"?>
-<!--
+<#--
 
-    Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -11,10 +10,6 @@
 
 -->
 
-<j:jelly trim="false"
-    xmlns:j="jelly:core"
-    xmlns:x="jelly:xml"
-    xmlns:html="jelly:html">
 <![CDATA[
 <!DOCTYPE sun-web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 9.0 Servlet 2.5//EN" "http://www.sun.com/software/appserver/dtds/sun-web-app_2_5-0.dtd">
 ]]>
@@ -25,4 +20,3 @@
   -->
   <class-loader delegate="false"/>
 </sun-web-app>
-</j:jelly>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -14,19 +14,27 @@ import com.sun.xml.ws.test.World;
 import com.sun.xml.ws.test.container.ApplicationContainer;
 import com.sun.xml.ws.test.CodeGenerator;
 import com.sun.xml.ws.test.container.DeployedService;
+import com.sun.xml.ws.test.model.TestEndpoint;
 import com.sun.xml.ws.test.model.TestService;
 import com.sun.xml.ws.test.util.ArgumentListBuilder;
 import com.sun.xml.ws.test.util.JavacTask;
+import com.sun.xml.ws.test.util.XMLUtil;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.OutputStream;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * {@link TestCase} that deploys a {@link TestService} to
@@ -56,38 +64,44 @@ public class DeploymentExecutor extends Executor {
             generateClientArtifacts();
         } else {
             addSTSToClasspath();
-            // updateWsitClient();
+            updateWsitClient();
         }
     }
-/*
-    public void updateWsitClient()throws Exception {
-        File wsitClientFile = new File(context.service.parent.resources,"wsit-client.xml");
-        if (wsitClientFile.exists() ){
-            SAXReader reader = new SAXReader();
-            Document document = reader.read(wsitClientFile);
-            Element root = document.getRootElement();
-            Element policy = root.element("Policy");
-            Element sts = policy.element("ExactlyOne").element("All").element("PreconfiguredSTS");
 
-            Attribute  endpoint = sts.attribute("endpoint");
+    public void updateWsitClient()throws Exception {
+        File wsitClientFile = new File(context.parent.getResources(),"wsit-client.xml");
+        if (wsitClientFile.exists()) {
+            Document document = XMLUtil.readXML(wsitClientFile, null);
+            Element root = document.getDocumentElement();
+            Element sts = XMLUtil.getElements(root, "//*[local-name()='Policy']/*[local-name()='ExactlyOne']/*[local-name()='All']/*[local-name()='PreconfiguredSTS']").get(0);
+
+            Attr  endpoint = sts.getAttributeNode("endpoint");
             URI uri = context.app.getEndpointAddress((TestEndpoint)context.service.endpoints.toArray()[0]);
             endpoint.setValue(uri.toString());
 
-            Attribute wsdlLoc = sts.attribute("wsdlLocation");
-            wsdlLoc.setValue(context.service.wsdl.wsdlFile.toURI().toString());
+            Attr wsdlLoc = sts.getAttributeNode("wsdlLocation");
+            wsdlLoc.setValue(context.service.wsdl.get(0).wsdlFile.toURI().toString());
 
-            XMLWriter writer = new XMLWriter(new FileWriter(wsitClientFile));
-            writer.write( document );
-            writer.close();
+//            for (Element keystore : XMLUtil.getElements(root, "//*[local-name()='KeyStore']")) {
+//                Attr loc = keystore.getAttributeNode("location");
+//                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
+//            }
+//
+//            for (Element truststore : XMLUtil.getElements(root, "//*[local-name()='TrustStore']")) {
+//                Attr loc = truststore.getAttributeNode("location");
+//                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
+//            }
+
+            try (OutputStream os = new FileOutputStream(wsitClientFile)) {
+                XMLUtil.writeXML(document, os);
+                os.flush();
+            }
 
         } else {
             throw new RuntimeException("wsit-client.xml is absent. It is required. \n"+
                     "Please check " + context.service.parent.resources );
         }
-
-
     }
-*/
 
     public void addSTSToClasspath() throws Exception{
         List<URL> classpath = context.clientClasspaths;
@@ -96,7 +110,7 @@ public class DeploymentExecutor extends Executor {
         if (context.parent.clientClassLoader != null) {
             baseCl = context.parent.clientClassLoader;
         }
-        
+
         classpath.add(new File(context.warDir, "WEB-INF/classes").toURL());
 
         context.parent.clientClassLoader= new URLClassLoader( classpath.toArray(new URL[classpath.size()]), baseCl );

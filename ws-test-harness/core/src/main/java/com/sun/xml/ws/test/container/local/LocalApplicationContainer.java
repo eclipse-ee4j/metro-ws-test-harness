@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -17,17 +17,16 @@ import com.sun.xml.ws.test.container.ApplicationContainer;
 import com.sun.xml.ws.test.container.DeployedService;
 import com.sun.xml.ws.test.container.WAR;
 import com.sun.xml.ws.test.tool.WsTool;
-import org.dom4j.Attribute;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.QName;
-import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
+import com.sun.xml.ws.test.util.XMLUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
 import java.util.List;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * {@link ApplicationContainer} for the local transport.
@@ -36,6 +35,7 @@ import java.util.List;
  *      To be removed once in-vm transport becomes ready
  * @author Kohsuke Kawaguchi
  */
+@Deprecated
 public class LocalApplicationContainer extends AbstractApplicationContainer {
 
     public LocalApplicationContainer(WsTool wsimport, WsTool wsgen) {
@@ -72,32 +72,36 @@ public class LocalApplicationContainer extends AbstractApplicationContainer {
      * Fix the address in the WSDL. to the local address.
      */
     private void patchWsdl(DeployedService service, File wsdl) throws Exception {
-        Document doc = new SAXReader().read(wsdl);
-        List<Element> ports = doc.getRootElement().element("service").elements("port");
+        Document doc = XMLUtil.readXML(wsdl, null);
+        List<Element> ports = XMLUtil.getElements(doc, "//*[local-name()='service']/*");
 
         for (Element port : ports) {
-            String portName = port.attributeValue("name");
+            String portName = port.getAttribute("name");
 
-            Element address = (Element)port.elements().get(0);
+            Element address = (Element)port.getFirstChild();
 
-            Attribute locationAttr = address.attribute("location");
+            Attr locationAttr = address.getAttributeNode("location");
             String newLocation =
                 "local://" + service.warDir.getAbsolutePath() + "?" + portName;
             newLocation = newLocation.replace('\\', '/');
             locationAttr.setValue(newLocation);
 
             //Patch wsa:Address in wsa:EndpointReference as well
-            Element wsaEprEl = port.element(QName.get("EndpointReference", "wsa", "http://www.w3.org/2005/08/addressing"));
+            NodeList nl = port.getElementsByTagNameNS("http://www.w3.org/2005/08/addressing", "EndpointReference");
+            Element wsaEprEl = nl.getLength() > 0 ? (Element) nl.item(0) : null;
             if (wsaEprEl != null) {
-                Element wsaAddrEl = wsaEprEl.element(QName.get("Address", "wsa", "http://www.w3.org/2005/08/addressing"));
-                wsaAddrEl.setText(newLocation);
+                nl = wsaEprEl.getElementsByTagNameNS("http://www.w3.org/2005/08/addressing", "Address");
+                Element wsaAddrEl = nl.getLength() > 0 ? (Element) nl.item(0) : null;
+                if (wsaAddrEl != null) {
+                    wsaAddrEl.setTextContent(newLocation);
+                }
 
             }
         }
 
         // save file
         FileOutputStream os = new FileOutputStream(wsdl);
-        new XMLWriter(os).write(doc);
+        XMLUtil.writeXML(doc, os);
         os.close();
     }
 
