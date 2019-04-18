@@ -23,6 +23,7 @@ import com.sun.xml.ws.test.util.XMLUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URLClassLoader;
 import java.net.URL;
@@ -132,9 +133,10 @@ public class InVmContainer extends AbstractApplicationContainer {
         }
 
         // save file
-        FileOutputStream os = new FileOutputStream(wsdl);
-        XMLUtil.writeXML(doc, os);
-        os.close();
+        try (OutputStream os = new FileOutputStream(wsdl)) {
+            XMLUtil.writeXML(doc, os);
+            os.flush();
+        }
     }
 
     private Element getSoapAddress(Element port){
