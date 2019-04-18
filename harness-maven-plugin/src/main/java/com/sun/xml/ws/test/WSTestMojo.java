@@ -154,7 +154,7 @@ public class WSTestMojo extends AbstractMojo {
 
     /**
      * Define FastInfoset mode to be used by tests.
-     * 
+     *
      * Supported values:
      * <ul>
      * <li><code>none</code>
@@ -310,8 +310,21 @@ public class WSTestMojo extends AbstractMojo {
         cmd.setExecutable(new File(new File(System.getProperty("java.home"), "bin"), getJavaExec()).getAbsolutePath());
         cmd.setWorkingDirectory(project.getBasedir());
 
+        // lukas:
+        // Some jar files on the classpath may be multi-release jars.
+        // To allow AntClassLoader (used by Harness) to find correct class files
+        // in these jars, either make sure that Ant 1.10.6+ is used at runtime
+        // or force JDK to always create JarFile instances with Runtime.Version
+        // of the JDK being used.
+        // Since the former requirement is hard to guarantee and to prevent false
+        // alarms when running tests, let's just force JDK to use the right
+        // JarFile constructor ourselves.
+        // for more details, see: https://bz.apache.org/bugzilla/show_bug.cgi?id=62952
+        // see also com.sun.xml.ws.test.Realm.getClassLoader()
+        cmd.createArg().setLine("-Djdk.util.jar.enableMultiRelease=force");
+
         //set API bootclasspath/endorsed
-        if (imageRoot != null) {
+        if (imageRoot != null && isEndorsedSupported()) {
             File end = prepareEndorsed(imageRoot);
             getLog().info("Setting endorsed directory to: " + end.getAbsolutePath());
             cmd.createArg().setLine("-Djava.endorsed.dirs=" + end.getAbsolutePath());
@@ -319,7 +332,9 @@ public class WSTestMojo extends AbstractMojo {
             getLog().info("Setting endorsed directory to: " + endorsedDir.getAbsolutePath());
             cmd.createArg().setValue("-Djava.endorsed.dirs=" + endorsedDir.getAbsolutePath());
         } else {
-            getLog().warn("Endorsed not applied. Set 'endorsedDir' in plugin's configuration.");
+            if (isEndorsedSupported()) {
+                getLog().warn("Endorsed not applied. Set 'endorsedDir' in plugin's configuration.");
+            }
         }
 
         if (extDir != null && extDir.exists() && extDir.isDirectory()) {
@@ -708,4 +723,15 @@ public class WSTestMojo extends AbstractMojo {
         }
         return null;
     }
+
+    private boolean isEndorsedSupported() {
+        String s = System.getProperty("java.version");
+        try {
+            int i = Integer.parseInt(s.substring(0, s.indexOf(".")));
+            return i < 10;
+        } catch (Throwable t) {
+            return false;
+        }
+    }
+
 }

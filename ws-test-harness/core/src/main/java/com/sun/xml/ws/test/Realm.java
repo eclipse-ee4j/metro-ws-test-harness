@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -11,7 +11,7 @@
 package com.sun.xml.ws.test;
 
 import com.sun.istack.Nullable;
-import org.apache.tools.ant.loader.AntClassLoader2;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.types.Path;
 
 import java.io.File;
@@ -29,7 +29,7 @@ import java.io.PrintStream;
  */
 public class Realm {
     /**
-     * Human readable name that identifies this realm for the debuggin purpose.
+     * Human readable name that identifies this realm for the debugging purpose.
      */
     private final String name;
 
@@ -43,7 +43,7 @@ public class Realm {
      */
     private final Path classPath = new Path(World.project);
 
-    private AntClassLoader2 classLoader;
+    private AntClassLoader classLoader;
 
     public Realm(String name, Realm parent) {
         this.name = name;
@@ -59,7 +59,7 @@ public class Realm {
             ClassLoader pcl = ClassLoader.getSystemClassLoader();
             if(parent!=null)
                 pcl = parent.getClassLoader();
-            classLoader = new AntClassLoader2(); 
+            classLoader = new AntClassLoader();
             classLoader.setParent(pcl);
             classLoader.setProject(World.project);
             classLoader.setClassPath(classPath);
