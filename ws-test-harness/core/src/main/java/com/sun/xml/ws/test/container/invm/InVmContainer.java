@@ -85,6 +85,18 @@ public class InVmContainer extends AbstractApplicationContainer {
      */
     private void patchWsdl(DeployedService service, File wsdl, String id) throws Exception {
         Document doc = XMLUtil.readXML(wsdl, null);
+
+        if (service.service.isSTS) {
+            for (Element keystore : XMLUtil.getElements(doc, "//*[local-name()='KeyStore']")) {
+                Attr loc = keystore.getAttributeNode("location");
+                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
+            }
+            for (Element truststore : XMLUtil.getElements(doc, "//*[local-name()='TrustStore']")) {
+                Attr loc = truststore.getAttributeNode("location");
+                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
+            }
+        }
+
         List<Element> ports = XMLUtil.getElements(doc, "//*[local-name()='service']/*");
 
         for (Element port : ports) {

@@ -69,6 +69,8 @@
         <jakarta.xml.bind-api.version>2.3.2</jakarta.xml.bind-api.version>
         <jakarta.xml.soap-api.version>1.4.1</jakarta.xml.soap-api.version>
         <jakarta.xml.ws-api.version>2.3.2</jakarta.xml.ws-api.version>
+        <jakarta.activation.version>1.2.1</jakarta.activation.version>
+        <istack-commons.version>3.1.0-SNAPSHOT</istack-commons.version>
         <metro.version>2.4.3</metro.version>
         <jaxws-ri.version>2.3.2</jaxws-ri.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -96,7 +98,7 @@
             <dependency>
                 <groupId>com.sun.activation</groupId>
                 <artifactId>jakarta.activation</artifactId>
-                <version>1.2.1</version>
+                <version>${jakarta.activation.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.jws</groupId>
@@ -209,6 +211,7 @@
                 <artifactId>plexus-classworlds</artifactId>
                 <version>2.5.2</version>
             </dependency>
+            <!-- CQ: 19526 -->
             <dependency>
                 <groupId>org.relaxng</groupId>
                 <artifactId>jing</artifactId>
@@ -230,10 +233,11 @@
                 <artifactId>isorelax</artifactId>
                 <version>20090621</version>
             </dependency>
+            <!-- CQ: 19582 -->
             <dependency>
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
-                <version>2.3.27-incubating</version>
+                <version>2.3.28</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

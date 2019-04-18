@@ -54,10 +54,6 @@
             <artifactId>istack-commons-test</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.metro</groupId>
-            <artifactId>harness-bootstrap</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
         </dependency>
@@ -202,7 +198,7 @@
             <properties>
                 <image>-cp:jaxws-image target/jaxws-ri-image/jaxws-ri</image>
                 <testcases>testcases/jaxws</testcases>
-                <harness.extra.jvm.arg.internal />
+                <harness.extra.jvm.arg.internal>-Djdk.util.jar.enableMultiRelease=force</harness.extra.jvm.arg.internal>
             </properties>
             <build>
                 <plugins>
@@ -296,7 +292,7 @@
             <properties>
                 <image>-cp:wsit-image target/metro-image/metro</image>
                 <testcases>testcases</testcases>
-                <harness.extra.jvm.arg.internal>-DWSIT_HOME=${project.basedir}/src/test/certs</harness.extra.jvm.arg.internal>
+                <harness.extra.jvm.arg.internal>-DWSIT_HOME=${project.basedir}/src/test/certs -Djdk.util.jar.enableMultiRelease=force</harness.extra.jvm.arg.internal>
             </properties>
             <build>
                 <plugins>

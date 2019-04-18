@@ -144,15 +144,15 @@ public abstract class AbstractApplicationContainer implements ApplicationContain
             Attr wsdlLoc = sts.getAttributeNode("wsdlLocation");
             wsdlLoc.setValue(deployedService.service.wsdl.get(0).wsdlFile.toURI().toString());
 
-//            for (Element keystore : XMLUtil.getElements(root, "//*[local-name()='KeyStore']")) {
-//                Attr loc = keystore.getAttributeNode("location");
-//                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
-//            }
-//
-//            for (Element truststore : XMLUtil.getElements(root, "//*[local-name()='TrustStore']")) {
-//                Attr loc = truststore.getAttributeNode("location");
-//                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
-//            }
+            for (Element keystore : XMLUtil.getElements(root, "//*[local-name()='KeyStore']")) {
+                Attr loc = keystore.getAttributeNode("location");
+                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
+            }
+
+            for (Element truststore : XMLUtil.getElements(root, "//*[local-name()='TrustStore']")) {
+                Attr loc = truststore.getAttributeNode("location");
+                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
+            }
 
             try (OutputStream os = new FileOutputStream(wsitClientFile)) {
                 XMLUtil.writeXML(document, os);

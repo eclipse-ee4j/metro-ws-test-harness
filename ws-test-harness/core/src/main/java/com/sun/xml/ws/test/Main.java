@@ -461,6 +461,9 @@ public class Main {
                         ? "target/generated-classes/cobertura"
                         : "target/classes";
 
+                if (new File(jaxwsWs, "rt/" + classesFolder + "/META-INF/versions/9").exists()) {
+                    runtime.addClassFolder(new File(jaxwsWs, "rt/" + classesFolder + "/META-INF/versions/9"));
+                }
                 runtime.addClassFolder(new File(jaxwsWs, "rt/" + classesFolder));
                 if (new File(jaxwsWs, "rt-ha/" + classesFolder).exists()) {
                     runtime.addClassFolder(new File(jaxwsWs, "rt-ha/" + classesFolder));
@@ -481,6 +484,9 @@ public class Main {
                     runtime.addClassFolder(new File(jaxwsWs, "eclipselink_sdo/" + classesFolder));
                 }
 
+                if (new File(jaxwsWs, "tools/wscompile/" + classesFolder + "/META-INF/versions/9").exists()) {
+                    tool.addClassFolder(new File(jaxwsWs, "tools/wscompile/" + classesFolder + "/META-INF/versions/9"));
+                }
                 tool.addClassFolder(new File(jaxwsWs, "tools/wscompile/" + classesFolder));
 
                 //now find libraries

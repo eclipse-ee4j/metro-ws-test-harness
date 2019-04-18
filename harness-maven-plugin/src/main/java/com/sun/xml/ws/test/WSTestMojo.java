@@ -591,7 +591,7 @@ public class WSTestMojo extends AbstractMojo {
     private Set<Artifact> getHarnessLib() throws MojoExecutionException {
        org.eclipse.aether.artifact.DefaultArtifact harnessLib = new org.eclipse.aether.artifact.DefaultArtifact(HARNESS_GID,HARNESS_AID, null, "jar", harnessVersion);
        Set<Artifact> result = new HashSet<>();
-       Set<ArtifactRequest> dependenciesRequest = new HashSet<ArtifactRequest>();
+       Set<ArtifactRequest> dependenciesRequest = new HashSet<>();
        ArtifactRequest request = new ArtifactRequest();
        request.setArtifact(harnessLib);
        request.setRepositories(remoteRepos);
@@ -608,7 +608,7 @@ public class WSTestMojo extends AbstractMojo {
         for (ArtifactResult dependency : resolvedDependencies) {
             Artifact a = dependency.getArtifact();
             result.add(a);
-            artifacts.add(new Dependency(dependency.getArtifact(), "test"));
+            artifacts.add(new Dependency(dependency.getArtifact(), "compile"));
         }
 
         DependencyResult res = null;
