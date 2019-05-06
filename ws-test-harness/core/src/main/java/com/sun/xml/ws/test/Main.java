@@ -728,7 +728,7 @@ public class Main {
 
             appContainer = new RemoteCargoApplicationContainer(
                     wsimport, wsgen,
-                    "tomcat5x",
+                    "tomcat9x",
                     new URL("http", matcher.group(4),
                             Integer.parseInt(defaultsTo(matcher.group(6), "8080")),
                             "/"),
@@ -988,8 +988,19 @@ public class Main {
                     tv.addFeature("servlet30");
                     tv.addFeature("servlet31");
                     break;
+                case '9':
+                    tv.setId("tomcat9x");
+                    tv.addFeature("servlet30");
+                    tv.addFeature("servlet31");
+                    tv.addFeature("servlet40");
+                    break;
                 default:
-                    tv.setId("tomcat5x");
+                    Logger.getLogger(Main.class.getName()).log(Level.WARNING, "Unrecognized Tomcat version: {0}.{1}", new Object[]{specVersion, implVersion});
+                    Logger.getLogger(Main.class.getName()).log(Level.WARNING, "Using default tomcat9x...");
+                    tv.setId("tomcat9x");
+                    tv.addFeature("servlet30");
+                    tv.addFeature("servlet31");
+                    tv.addFeature("servlet40");
             }
             return tv;
         }

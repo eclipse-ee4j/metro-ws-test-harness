@@ -10,9 +10,6 @@
 
 -->
 
-<![CDATA[
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
-]]>
 <web-app>
     <display-name>${data.displayName}</display-name>
     <description>${data.description}</description>
