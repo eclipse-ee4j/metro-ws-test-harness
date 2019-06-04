@@ -401,6 +401,11 @@ public class Main {
 
         // fill in runtime and tool realms
         if (wsitImage != null) {
+            if (System.getProperty("java.endorsed.dirs") == null) {
+                // APIs should come from endorsed on JDK 8 and older
+                File rtJar = new File(wsitImage, "lib/webservices-api.jar");
+                runtime.addJar(rtJar);
+            }
             File rtJar = new File(wsitImage, "lib/webservices-rt.jar");
             runtime.addJar(rtJar);
 

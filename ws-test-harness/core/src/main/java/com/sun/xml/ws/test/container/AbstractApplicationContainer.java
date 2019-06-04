@@ -15,20 +15,15 @@ import com.sun.xml.ws.test.World;
 import com.sun.xml.ws.test.container.jelly.EndpointInfoBean;
 import com.sun.xml.ws.test.model.TestService;
 import com.sun.xml.ws.test.tool.WsTool;
-import com.sun.xml.ws.test.util.XMLUtil;
+import com.sun.xml.ws.test.util.WSITUtil;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Base implementation of {@link ApplicationContainer}.
@@ -134,30 +129,7 @@ public abstract class AbstractApplicationContainer implements ApplicationContain
     protected void updateWsitClient(WAR war, DeployedService deployedService, String id) throws Exception {
         File wsitClientFile = new File(deployedService.getResources(), "wsit-client.xml");
         if (wsitClientFile.exists()) {
-            Document document = XMLUtil.readXML(wsitClientFile, null);
-            Element root = document.getDocumentElement();
-            Element sts = XMLUtil.getElements(root, "//*[local-name()='Policy']/*[local-name()='ExactlyOne']/*[local-name()='All']/*[local-name()='PreconfiguredSTS']").get(0);
-
-            Attr  endpoint = sts.getAttributeNode("endpoint");
-            endpoint.setValue(id);
-
-            Attr wsdlLoc = sts.getAttributeNode("wsdlLocation");
-            wsdlLoc.setValue(deployedService.service.wsdl.get(0).wsdlFile.toURI().toString());
-
-            for (Element keystore : XMLUtil.getElements(root, "//*[local-name()='KeyStore']")) {
-                Attr loc = keystore.getAttributeNode("location");
-                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
-            }
-
-            for (Element truststore : XMLUtil.getElements(root, "//*[local-name()='TrustStore']")) {
-                Attr loc = truststore.getAttributeNode("location");
-                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
-            }
-
-            try (OutputStream os = new FileOutputStream(wsitClientFile)) {
-                XMLUtil.writeXML(document, os);
-                os.flush();
-            }
+            WSITUtil.updateWsitClient(wsitClientFile, id, deployedService.service.wsdl.get(0).wsdlFile.toURI().toString());
             war.copyWsit(wsitClientFile);
         } else {
             throw new RuntimeException("wsit-client.xml is absent. It is required. \n"

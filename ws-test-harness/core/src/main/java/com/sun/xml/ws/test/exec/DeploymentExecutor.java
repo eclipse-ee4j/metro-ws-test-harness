@@ -18,23 +18,18 @@ import com.sun.xml.ws.test.model.TestEndpoint;
 import com.sun.xml.ws.test.model.TestService;
 import com.sun.xml.ws.test.util.ArgumentListBuilder;
 import com.sun.xml.ws.test.util.JavacTask;
-import com.sun.xml.ws.test.util.XMLUtil;
+import com.sun.xml.ws.test.util.WSITUtil;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * {@link TestCase} that deploys a {@link TestService} to
@@ -71,32 +66,8 @@ public class DeploymentExecutor extends Executor {
     public void updateWsitClient()throws Exception {
         File wsitClientFile = new File(context.parent.getResources(),"wsit-client.xml");
         if (wsitClientFile.exists()) {
-            Document document = XMLUtil.readXML(wsitClientFile, null);
-            Element root = document.getDocumentElement();
-            Element sts = XMLUtil.getElements(root, "//*[local-name()='Policy']/*[local-name()='ExactlyOne']/*[local-name()='All']/*[local-name()='PreconfiguredSTS']").get(0);
-
-            Attr  endpoint = sts.getAttributeNode("endpoint");
             URI uri = context.app.getEndpointAddress((TestEndpoint)context.service.endpoints.toArray()[0]);
-            endpoint.setValue(uri.toString());
-
-            Attr wsdlLoc = sts.getAttributeNode("wsdlLocation");
-            wsdlLoc.setValue(context.service.wsdl.get(0).wsdlFile.toURI().toString());
-
-            for (Element keystore : XMLUtil.getElements(root, "//*[local-name()='KeyStore']")) {
-                Attr loc = keystore.getAttributeNode("location");
-                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
-            }
-
-            for (Element truststore : XMLUtil.getElements(root, "//*[local-name()='TrustStore']")) {
-                Attr loc = truststore.getAttributeNode("location");
-                loc.setValue(loc.getValue().replaceAll("\\$WSIT_HOME", System.getProperty("WSIT_HOME")));
-            }
-
-            try (OutputStream os = new FileOutputStream(wsitClientFile)) {
-                XMLUtil.writeXML(document, os);
-                os.flush();
-            }
-
+            WSITUtil.updateWsitClient(wsitClientFile, uri.toString(), context.service.wsdl.get(0).wsdlFile.toURI().toString());
         } else {
             throw new RuntimeException("wsit-client.xml is absent. It is required. \n"+
                     "Please check " + context.service.parent.resources );

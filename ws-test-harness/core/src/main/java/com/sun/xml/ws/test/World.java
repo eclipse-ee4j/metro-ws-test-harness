@@ -11,13 +11,12 @@
 package com.sun.xml.ws.test;
 
 import org.apache.tools.ant.Project;
-import org.codehaus.classworlds.ClassRealm;
 
 /**
  * "Global variables" for the test harness. Use with caution.
  *
  * This class includes pointers to
- * various {@link ClassRealm}s that represent compartments inside the VM.
+ * various {@link Realm}s that represent compartments inside the VM.
  *
  * <p>
  * The followings are the key realms:
