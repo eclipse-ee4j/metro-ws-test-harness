@@ -96,12 +96,12 @@
             <dependency>
                 <groupId>com.sun.istack</groupId>
                 <artifactId>istack-commons-runtime</artifactId>
-                <version>3.0.8</version>
+                <version>3.0.9</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.istack</groupId>
                 <artifactId>istack-commons-test</artifactId>
-                <version>3.0.8</version>
+                <version>3.0.9</version>
                 <exclusions>
                     <exclusion>
                         <groupId>junit</groupId>
