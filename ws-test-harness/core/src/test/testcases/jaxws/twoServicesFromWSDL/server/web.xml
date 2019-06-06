@@ -1,4 +1,4 @@
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
@@ -11,7 +11,10 @@
 
 -->
 
-<web-app>
+<web-app version="2.5"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     <display-name>jaxws.twoServices</display-name>
     <description>Tests two @WebService with fromjava scenario.</description>
     <listener>
