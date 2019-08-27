@@ -6,7 +6,7 @@ This content is produced and maintained by the Eclipse Metro project.
 
 ## Trademarks
 
-Eclipse Metro is a trademark of the Eclipse Foundation.
+ Eclipse Metro is a trademark of the Eclipse Foundation.
 
 ## Copyright
 
@@ -62,12 +62,27 @@ Apache Ant (1.10.2)
 
 * License: Apache-2.0 AND W3C AND LicenseRef-Public-Domain
 
+asm (7.1)
+
+* License: BSD-3-Clause
+
+cargo-core-uberjar (1.7.7)
+
+* License: Apache-2.0 AND MIT
+* Project: https://codehaus-cargo.github.io/cargo/Home.html
+* Source:
+   https://github.com/codehaus-cargo/cargo/releases/tag/codehaus-cargo-1.7.7
+
 commons-logging (1.1.2)
 
 * License: Apache-2.0
 * Project: https://commons.apache.org/proper/commons-logging/
 * Source:
    http://central.maven.org/maven2/commons-logging/commons-logging/1.1.2/commons-logging-1.1.2-sources.jar
+
+Freemarker (2.3.28)
+
+* License: Apache-2.0 AND OFL-1.1 AND CC-BY-SA-3.0
 
 grizzly-framework-http (1.0.40)
 
@@ -84,6 +99,13 @@ jaxr-impl (1.0.8)
 
 * License: CDDL-1.0
 * Project: https://www.oracle.com/technetwork/java/jaxr-138137.html
+
+jing RelaxNG validator version 20181222 (n/a)
+
+* License: BSD-3-Clause AND LicenseRef-ISO
+* Project: http://www.thaiopensource.com/relaxng/jing.html
+* Source:
+   https://repo1.maven.org/maven2/org/relaxng/jing/20181222/jing-20181222-sources.jar
 
 JUnit (4.12)
 
@@ -127,8 +149,8 @@ mex.xsd Version: 2004/09 (n/a)
 
 plexus-utils (3.1.0)
 
-* License: Apache- 2.0 or Apache- 1.1 or BSD or Public Domain or Indiana
-   University Extreme! Lab Software License V1.1.1 (Apache 1.1 style)
+* License: Apache-2.0 AND Apache-1.1 AND BSD-3-Clause AND Public Domain AND
+   Indiana University Extreme! Lab Software License V1.1.1 (Apache 1.1 style)
 
 relaxng-datatype (1.0)
 
