@@ -9,7 +9,7 @@
  */
 package com.sun.xml.ws.test.util;
 
-import com.thaiopensource.relaxng.jarv.RelaxNgCompactSyntaxVerifierFactory;
+import com.thaiopensource.relaxng.jaxp.CompactSyntaxSchemaFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
@@ -24,13 +25,13 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.Validator;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import org.iso_relax.jaxp.ValidatingDocumentBuilderFactory;
-import org.iso_relax.verifier.Schema;
-import org.iso_relax.verifier.VerifierConfigurationException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -54,26 +55,25 @@ public final class XMLUtil {
     }
 
     public static Document readXML(File f, URL schemaUrl) throws ParserConfigurationException, SAXException, IOException {
-        DocumentBuilderFactory factory;
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         if (schemaUrl != null) {
             String ef = schemaUrl.toExternalForm();
             if (!ef.equalsIgnoreCase(url)) {
                 try {
-                    s = new RelaxNgCompactSyntaxVerifierFactory().compileSchema(ef);
+                    s = new CompactSyntaxSchemaFactory().newSchema(new URL(ef));
                 } catch (SAXParseException e) {
                     throw new Error("unable to parse test-descriptor.rnc at line " + e.getLineNumber(), e);
-                } catch (IOException | VerifierConfigurationException | SAXException e) {
+                } catch (IOException | SAXException e) {
                     throw new Error("unable to parse test-descriptor.rnc", e);
                 }
                 url = ef;
             }
-            factory = new VP(s);
-        } else {
-            factory = DocumentBuilderFactory.newInstance();
+            Validator v = s.newValidator();
+            v.validate(new StreamSource(f));
         }
         factory.setNamespaceAware(true);
-        factory.setValidating(schemaUrl != null);
-        return factory.newDocumentBuilder().parse(f);
+        DocumentBuilder docBuilder = factory.newDocumentBuilder();
+        return docBuilder.parse(f);
     }
 
     public static void writeXML(Document doc, OutputStream os) throws TransformerException {
@@ -151,11 +151,4 @@ public final class XMLUtil {
         return s.trim().isEmpty() ? def : s;
     }
 
-    private static class VP extends ValidatingDocumentBuilderFactory {
-
-        private VP(Schema descriptorSchema) {
-            super(DocumentBuilderFactory.newInstance(), descriptorSchema);
-        }
-
-    }
 }

@@ -74,20 +74,12 @@
             <artifactId>cargo-core-uberjar</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-classworlds</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.relaxng</groupId>
             <artifactId>jing</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind.jaxb</groupId>
-            <artifactId>isorelax</artifactId>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>

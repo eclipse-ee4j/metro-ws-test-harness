@@ -31,7 +31,6 @@ import junit.textui.TestRunner;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter;
-import org.codehaus.classworlds.ClassWorld;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -64,8 +63,6 @@ import java.util.regex.Pattern;
  */
 public class Main {
     // private static final Logger logger = Logger.getLogger(Main.class.getName());
-
-    public static final ClassWorld world = new ClassWorld();
 
     /**
      * Tests to be executed.
