@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -27,7 +27,7 @@ final class JavaSeApplication extends AbstractHttpApplication {
 
 
     /**
-     * <tt>javax.xml.ws.Endpoint</tt> objects. This is loaded in another classloader,
+     * <tt>jakarta.xml.ws.Endpoint</tt> objects. This is loaded in another classloader,
      * so we can't use a typed value.
      */
     private final @NotNull Object[] servers;

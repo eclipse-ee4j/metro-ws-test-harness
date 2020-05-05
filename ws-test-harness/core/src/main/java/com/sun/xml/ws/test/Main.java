@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -730,7 +730,7 @@ public class Main {
 
             appContainer = new RemoteCargoApplicationContainer(
                     wsimport, wsgen,
-                    "tomcat9x",
+                    "tomcat10x",
                     new URL("http", matcher.group(4),
                             Integer.parseInt(defaultsTo(matcher.group(6), "8080")),
                             "/"),
@@ -998,8 +998,8 @@ public class Main {
                     break;
                 default:
                     Logger.getLogger(Main.class.getName()).log(Level.WARNING, "Unrecognized Tomcat version: {0}.{1}", new Object[]{specVersion, implVersion});
-                    Logger.getLogger(Main.class.getName()).log(Level.WARNING, "Using default tomcat9x...");
-                    tv.setId("tomcat9x");
+                    Logger.getLogger(Main.class.getName()).log(Level.WARNING, "Using default tomcat10x...");
+                    tv.setId("tomcat10x");
                     tv.addFeature("servlet30");
                     tv.addFeature("servlet31");
                     tv.addFeature("servlet40");

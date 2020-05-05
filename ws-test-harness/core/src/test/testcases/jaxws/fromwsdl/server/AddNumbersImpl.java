@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -17,7 +17,7 @@ package jaxws.fromwsdl.server;
  * endpointInteface as the compiler will catch errors in the methods signatures of the 
  * implementation class.
  */
-@javax.jws.WebService (endpointInterface="jaxws.fromwsdl.server.AddNumbersPortType")
+@jakarta.jws.WebService (endpointInterface="jaxws.fromwsdl.server.AddNumbersPortType")
 public class AddNumbersImpl {
     
     /**

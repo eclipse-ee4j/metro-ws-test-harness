@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -70,13 +70,13 @@ public class ClientExecutor extends Executor {
 
         NameSpace ns = engine.getNameSpace();
         // import namespaces. what are the other namespaces to be imported?
-        importPackage(ns, "javax.activation");
-        importPackage(ns, "javax.xml.ws");
-        importPackage(ns, "javax.xml.ws.soap");
-        importPackage(ns, "javax.xml.ws.handler");
-        importPackage(ns, "javax.xml.ws.handler.soap");
-        importPackage(ns, "javax.xml.bind");
-        importPackage(ns, "javax.xml.soap");
+        importPackage(ns, "jakarta.activation");
+        importPackage(ns, "jakarta.xml.ws");
+        importPackage(ns, "jakarta.xml.ws.soap");
+        importPackage(ns, "jakarta.xml.ws.handler");
+        importPackage(ns, "jakarta.xml.ws.handler.soap");
+        importPackage(ns, "jakarta.xml.bind");
+        importPackage(ns, "jakarta.xml.soap");
         importPackage(ns, "javax.xml.namespace");
         importPackage(ns, "javax.xml.transform");
         importPackage(ns, "javax.xml.transform.sax");
@@ -191,7 +191,7 @@ public class ClientExecutor extends Executor {
                     String packageName = clazz.getPackage().getName();
                     //  import the artifact package
                     ns.importPackage(packageName);
-                    //  use reflection to list up all methods with 'javax.xml.ws.WebEndpoint' annotations
+                    //  use reflection to list up all methods with 'jakarta.xml.ws.WebEndpoint' annotations
                     //  invoke that method via reflection to obtain the Port object.
                     //  set the endpoint address to that port object
                     //  inject it to the scripting engine
@@ -200,7 +200,7 @@ public class ClientExecutor extends Executor {
                     // annotation that serviceClass loads and annotation that this code
                     // uses might be different
                     Class<? extends Annotation> webendpointAnnotation = clazz.getClassLoader()
-                            .loadClass("javax.xml.ws.WebEndpoint").asSubclass(Annotation.class);
+                            .loadClass("jakarta.xml.ws.WebEndpoint").asSubclass(Annotation.class);
                     Method nameMethod = webendpointAnnotation.getDeclaredMethod("name");
 
                     Object serviceInstance = clazz.newInstance();

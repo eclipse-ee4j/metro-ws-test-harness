@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -9,15 +9,8 @@
  */
 
 package wsrm.secureroundtrip.server;
-import javax.xml.bind.JAXBElement;
-import javax.jws.WebService;
 
-import javax.xml.bind.*;
-import javax.xml.namespace.*;
-
-import javax.jws.WebService;
-import javax.jws.WebParam;
-import javax.xml.bind.JAXBElement;
+import jakarta.jws.WebService;
 
 @WebService(endpointInterface="wsrm.secureroundtrip.server.IPingService")
 public class IPingImpl {

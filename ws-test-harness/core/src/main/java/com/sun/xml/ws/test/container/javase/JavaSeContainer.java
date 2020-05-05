@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -143,11 +143,11 @@ public class JavaSeContainer extends AbstractApplicationContainer {
             Map<String, Object> props = new HashMap<String, Object>();
             if (endpointInfoBean != null && endpointInfoBean.getServiceName() != null) {
                 // Endpoint.WSDL_SERVICE
-                props.put("javax.xml.ws.wsdl.service", endpointInfoBean.getServiceName());
+                props.put("jakarta.xml.ws.wsdl.service", endpointInfoBean.getServiceName());
             }
             if (endpointInfoBean != null && endpointInfoBean.getPortName() != null) {
                 // Endpoint.WSDL_PORT
-                props.put("javax.xml.ws.wsdl.port", endpointInfoBean.getPortName());
+                props.put("jakarta.xml.ws.wsdl.port", endpointInfoBean.getPortName());
             }
             System.out.println("Setting properties="+props);
 
@@ -166,8 +166,8 @@ public class JavaSeContainer extends AbstractApplicationContainer {
             CodeGenerator.generateDeploySources(war, testEndpoint, metadata, props, endpointAddress, wsdlLocation, !service.service.wsdl.isEmpty());
 
             try {
-                String statements = "      javax.xml.ws.Endpoint endpoint = javax.xml.ws.Endpoint.create(endpointImpl" +
-                        (feature != null ? ", new javax.xml.ws.WebServiceFeature[] {feature});" : ");\n") +
+                String statements = "      jakarta.xml.ws.Endpoint endpoint = jakarta.xml.ws.Endpoint.create(endpointImpl" +
+                        (feature != null ? ", new jakarta.xml.ws.WebServiceFeature[] {feature});" : ");\n") +
                         "      endpoint.setMetadata(metadata);\n" +
                         "      endpoint.setProperties(properties);\n" +
                         "      endpoint.publish(\"" + endpointAddress + "\");\n" +

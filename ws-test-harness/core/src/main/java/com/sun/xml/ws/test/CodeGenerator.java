@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -499,12 +499,12 @@ public class CodeGenerator {
         templateParams.put("metadata_files", metadata_files);
         templateParams.put("props", props);
 
-        QName qname = (QName) props.get("javax.xml.ws.wsdl.port");
+        QName qname = (QName) props.get("jakarta.xml.ws.wsdl.port");
         if (qname != null) {
             templateParams.put("portURI", "" + qname.getNamespaceURI());
             templateParams.put("portLOCAL", "" + qname.getLocalPart());
         }
-        qname = (QName) props.get("javax.xml.ws.wsdl.service");
+        qname = (QName) props.get("jakarta.xml.ws.wsdl.service");
         if (qname != null) {
             templateParams.put("svcURI", "" + qname.getNamespaceURI());
             templateParams.put("svcLOCAL", "" + qname.getLocalPart());

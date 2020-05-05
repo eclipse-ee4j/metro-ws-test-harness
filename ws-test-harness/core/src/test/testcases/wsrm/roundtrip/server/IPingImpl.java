@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -9,17 +9,14 @@
  */
 
 package wsrm.roundtrip.server;
-import javax.xml.bind.JAXBElement;
-import javax.jws.WebService;
 
-import javax.xml.bind.*;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.jws.WebService;
+
 import javax.xml.namespace.*;
 
-import javax.jws.WebService;
-import javax.jws.WebParam;
-import javax.xml.bind.JAXBElement;
-import javax.xml.ws.soap.*;
-import javax.xml.ws.*;
+import jakarta.xml.ws.soap.*;
+import jakarta.xml.ws.*;
 
 @WebService(endpointInterface="wsrm.roundtrip.server.IPing", targetNamespace="http://tempuri.org/", serviceName="PingService", portName="WSHttpBinding_IPing")
 @BindingType(SOAPBinding.SOAP12HTTP_BINDING)

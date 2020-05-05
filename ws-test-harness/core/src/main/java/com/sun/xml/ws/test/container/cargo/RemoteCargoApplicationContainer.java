@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -22,6 +22,8 @@ import org.codehaus.cargo.generic.configuration.ConfigurationFactory;
 import org.codehaus.cargo.generic.configuration.DefaultConfigurationFactory;
 
 import java.net.URL;
+import org.codehaus.cargo.container.property.GeneralPropertySet;
+import org.codehaus.cargo.container.property.ServletPropertySet;
 
 /**
  * {@link ApplicationContainer} that talks to a server that's already running
@@ -59,11 +61,15 @@ public class RemoteCargoApplicationContainer extends AbstractCargoContainer<Remo
             (RuntimeConfiguration) configurationFactory.createConfiguration(
                 containerId, ContainerType.REMOTE, ConfigurationType.RUNTIME);
 
+        configuration.setProperty(GeneralPropertySet.HOSTNAME, serverUrl.getHost());
+        configuration.setProperty(GeneralPropertySet.PROTOCOL, serverUrl.getProtocol());
         configuration.setProperty(RemotePropertySet.USERNAME, userName);
         configuration.setProperty(RemotePropertySet.PASSWORD, password);
         if(containerId.startsWith("tomcat")) {
+            configuration.setProperty(ServletPropertySet.PORT,
+                    serverUrl.getPort() < 0 ? "8080" : String.valueOf(serverUrl.getPort()));
             configuration.setProperty(RemotePropertySet.URI,
-                new URL(server,"/manager").toExternalForm());
+                new URL(server,"/manager/text").toExternalForm());
         }
 
         // TODO: we should provide a mode to launch the container with debugger

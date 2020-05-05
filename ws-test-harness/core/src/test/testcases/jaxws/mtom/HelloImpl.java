@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -10,16 +10,15 @@
 
 package jaxws.mtom;
 
-import javax.jws.WebService;
-import javax.xml.ws.Holder;
-import javax.activation.DataHandler;
+import jakarta.jws.WebService;
+import jakarta.xml.ws.Holder;
 import java.awt.Image;
 
 @WebService (endpointInterface = "jaxws.mtom.Hello")
 public class HelloImpl implements Hello {
     public void detail (Holder<byte[]> photo, Holder<Image> image) {
     }
-      
+
     public void echoData (Holder<byte[]> data){
     }
 }

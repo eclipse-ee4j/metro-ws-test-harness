@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -165,7 +165,7 @@ public class JavaClientExecutor extends Executor {
 
     private boolean hasWebServiceRef(Field f) {
         for (Annotation a : f.getAnnotations()) {
-            if(a.annotationType().getName().equals("javax.xml.ws.WebServiceRef"))
+            if(a.annotationType().getName().equals("jakarta.xml.ws.WebServiceRef"))
                 return true;
         }
         return false;
@@ -208,7 +208,7 @@ public class JavaClientExecutor extends Executor {
             if (! svc.service.isSTS) {
                 for (Class clazz : svc.serviceClass) {
                     String packageName = clazz.getPackage().getName();
-                    //  use reflection to list up all methods with 'javax.xml.ws.WebEndpoint' annotations
+                    //  use reflection to list up all methods with 'jakarta.xml.ws.WebEndpoint' annotations
                     //  invoke that method via reflection to obtain the Port object.
                     //  set the endpoint address to that port object
                     //  inject it to the scripting engine
@@ -217,7 +217,7 @@ public class JavaClientExecutor extends Executor {
                     // annotation that serviceClass loads and annotation that this code
                     // uses might be different
                     Class<? extends Annotation> webendpointAnnotation = clazz.getClassLoader()
-                            .loadClass("javax.xml.ws.WebEndpoint").asSubclass(Annotation.class);
+                            .loadClass("jakarta.xml.ws.WebEndpoint").asSubclass(Annotation.class);
                     Method nameMethod = webendpointAnnotation.getDeclaredMethod("name");
 
                     for (Method method : methods) {

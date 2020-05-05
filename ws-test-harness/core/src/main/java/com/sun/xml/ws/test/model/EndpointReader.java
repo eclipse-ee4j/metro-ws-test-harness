@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -20,20 +20,20 @@ import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
-import javax.xml.ws.WebServiceProvider;
+import jakarta.xml.ws.WebServiceProvider;
 
 /**
  *
  * @author lukas
  */
 @SupportedAnnotationTypes({
-    "javax.jws.WebService",
-    "javax.xml.ws.WebServiceProvider"
+    "jakarta.jws.WebService",
+    "jakarta.xml.ws.WebServiceProvider"
 })
 public class EndpointReader extends AbstractProcessor {
 

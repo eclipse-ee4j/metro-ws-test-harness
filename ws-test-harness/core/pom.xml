@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -164,6 +164,9 @@
 <!--                            <arg value="-tomcat-local" />
                             <arg path="/space/sources/ws-test-harness/apache-tomcat-7.0.42" />-->
 
+<!--                            <arg value="-tomcat-remote" />
+                            <arg value="localhost" />-->
+
                             <arg value="-transport" />
                             <arg path="target/transport/jaxws-local-transport.jar" />
 
@@ -198,43 +201,6 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
-                            <execution>
-                                <id>copy</id>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>target/endorsed</outputDirectory>
-                                    <silent>false</silent>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>jakarta.xml.bind</groupId>
-                                            <artifactId>jakarta.xml.bind-api</artifactId>
-                                            <version>${jakarta.xml.bind-api.version}</version>
-                                            <type>jar</type>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>jakarta.jws</groupId>
-                                            <artifactId>jakarta.jws-api</artifactId>
-                                            <version>${jakarta.jws-api.version}</version>
-                                            <type>jar</type>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>jakarta.xml.soap</groupId>
-                                            <artifactId>jakarta.xml.soap-api</artifactId>
-                                            <version>${jakarta.xml.soap-api.version}</version>
-                                            <type>jar</type>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>jakarta.xml.ws</groupId>
-                                            <artifactId>jakarta.xml.ws-api</artifactId>
-                                            <version>${jakarta.xml.ws-api.version}</version>
-                                            <type>jar</type>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
                             <execution>
                                 <id>unpack-image</id>
                                 <phase>validate</phase>
@@ -292,25 +258,6 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
-                            <execution>
-                                <id>copy</id>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>target/endorsed</outputDirectory>
-                                    <silent>false</silent>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.glassfish.metro</groupId>
-                                            <artifactId>webservices-api</artifactId>
-                                            <version>${metro.version}</version>
-                                            <type>jar</type>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
                             <execution>
                                 <id>unpack-image</id>
                                 <phase>validate</phase>
