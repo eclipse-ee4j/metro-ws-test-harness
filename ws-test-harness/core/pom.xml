@@ -74,6 +74,10 @@
             <artifactId>cargo-core-uberjar</artifactId>
         </dependency>
         <dependency>
+            <groupId>commons-discovery</groupId>
+            <artifactId>commons-discovery</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.relaxng</groupId>
             <artifactId>jing</artifactId>
         </dependency>
@@ -161,8 +165,11 @@
                             <arg value="-report" />
                             <arg path="target/surefire-reports" />
 
+<!--                            <arg value="-tomcat-embedded" />
+                            <arg path="/Users/lukas/java/apache-tomcat-10.0.0-M4" />-->
+
 <!--                            <arg value="-tomcat-local" />
-                            <arg path="/space/sources/ws-test-harness/apache-tomcat-7.0.42" />-->
+                            <arg path="/Users/lukas/java/apache-tomcat-10.0.0-M4" />-->
 
 <!--                            <arg value="-tomcat-remote" />
                             <arg value="localhost" />-->

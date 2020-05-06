@@ -378,8 +378,7 @@ public class Main {
         // fill in container realm.
         if (embeddedTomcat != null) {
             runtime.addJarFolder(new File(embeddedTomcat, "bin"));
-            runtime.addJarFolder(new File(embeddedTomcat, "common/lib"));
-            runtime.addJarFolder(new File(embeddedTomcat, "server/lib"));
+            runtime.addJarFolder(new File(embeddedTomcat, "lib"));
         }
 
         if (tomcat != null) {
@@ -412,16 +411,12 @@ public class Main {
             File extraJar = new File(wsitImage, "lib/webservices-extra.jar");
             runtime.addJar(extraJar);
 
-            File extraApiJar = new File(wsitImage, "lib/webservices-extra-api.jar");
-            runtime.addJar(extraApiJar);
-
-            containerClasspathPrefix = new File[5];
+            containerClasspathPrefix = new File[4];
             //TODO: FIX ME!?
 //            containerClasspathPrefix[0] = rtJar;
 //            containerClasspathPrefix[1] = toolJar;
 //            containerClasspathPrefix[2] = apiJar;
 //            containerClasspathPrefix[3] = extraJar;
-//            containerClasspathPrefix[4] = extraApiJar;
 
         } else if (wsitWs != null) {
             runtime.addClassFolder(new File(wsitWs, "rt/build/classes"));
@@ -710,7 +705,7 @@ public class Main {
 
         if (embeddedTomcat != null) {
             appContainer = new EmbeddedCargoApplicationContainer(
-                    wsimport, wsgen, "tomcat5x", port, httpspi);
+                    wsimport, wsgen, "tomcat10x", port, httpspi);
             appContainer.getUnsupportedUses().add("servlet30");
         }
 

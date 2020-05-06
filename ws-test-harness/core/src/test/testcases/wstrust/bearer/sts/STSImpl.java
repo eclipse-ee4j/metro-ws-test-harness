@@ -18,7 +18,7 @@
 package wstrust.bearer.sts;
 
 import com.sun.xml.ws.security.trust.sts.BaseSTSImpl;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import jakarta.xml.ws.Provider;
 import jakarta.xml.ws.Service;

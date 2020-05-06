@@ -178,12 +178,18 @@
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-core-uberjar</artifactId>
                 <version>1.7.12</version>
-<!--                <exclusions>
+                <exclusions>
                     <exclusion>
                         <groupId>*</groupId>
                         <artifactId>*</artifactId>
                     </exclusion>
-                </exclusions>-->
+                </exclusions>
+            </dependency>
+            <!-- CQ: 22132 -->
+            <dependency>
+                <groupId>commons-discovery</groupId>
+                <artifactId>commons-discovery</artifactId>
+                <version>0.5</version>
             </dependency>
             <!-- CQ: 19526 -->
             <dependency>
