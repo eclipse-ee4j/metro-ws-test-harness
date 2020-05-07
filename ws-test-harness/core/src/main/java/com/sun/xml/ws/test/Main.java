@@ -397,11 +397,9 @@ public class Main {
 
         // fill in runtime and tool realms
         if (wsitImage != null) {
-            if (System.getProperty("java.endorsed.dirs") == null) {
-                // APIs should come from endorsed on JDK 8 and older
-                File rtJar = new File(wsitImage, "lib/webservices-api.jar");
-                runtime.addJar(rtJar);
-            }
+            File apiJar = new File(wsitImage, "lib/webservices-api.jar");
+            runtime.addJar(apiJar);
+
             File rtJar = new File(wsitImage, "lib/webservices-rt.jar");
             runtime.addJar(rtJar);
 
@@ -433,104 +431,65 @@ public class Main {
             }
             tool.addJar(new File(jaxwsImage, "lib/jaxb-xjc.jar"));
             List<String> exclusionList = new ArrayList<>();
-            exclusionList.add("saaj-api.jar");
-            exclusionList.add("jaxb-api.jar");
             exclusionList.add("jaxws-tools.jar");
-            exclusionList.add("jaxws-api.jar");
             exclusionList.add("jaxb-jxc.jar");
             exclusionList.add("jaxb-xjc.jar");
-            if (System.getProperty("java.endorsed.dirs") != null) {
-                // APIs should come from endorsed on JDK 8 and older
-                exclusionList.add("jakarta.jws-api.jar");
-                exclusionList.add("jakarta.xml.bind-api.jar");
-                exclusionList.add("jakarta.xml.soap-api.jar");
-                exclusionList.add("jakarta.xml.ws-api.jar");
-            }
             runtime.addJarFolder(new File(jaxwsImage, "lib"),
-                    exclusionList.toArray(new String[exclusionList.size()]));
+                exclusionList.toArray(new String[exclusionList.size()]));
 
         } else if (jaxwsWs != null) {
+            //maven build
+            //runtime
+            File jaxwsRt = new File(jaxwsWs, "runtime");
+            //is the build instrumented by cobertura?
+            String classesFolder = new File(jaxwsRt, "rt/target/generated-classes/cobertura").exists()
+                    ? "target/generated-classes/cobertura"
+                    : "target/classes";
 
-            if (new File(jaxwsWs, "pom.xml").exists()) {
-                //maven build
-                //is the build instrumented by cobertura?
-                String classesFolder = new File(jaxwsWs, "rt/target/generated-classes/cobertura").exists()
-                        ? "target/generated-classes/cobertura"
-                        : "target/classes";
+            if (new File(jaxwsRt, "policy/" + classesFolder).exists()) {
+                runtime.addClassFolder(new File(jaxwsRt, "policy/" + classesFolder));
+            }
+            if (new File(jaxwsRt, "rt/" + classesFolder + "/META-INF/versions/9").exists()) {
+                runtime.addClassFolder(new File(jaxwsRt, "rt/" + classesFolder + "/META-INF/versions/9"));
+            }
+            runtime.addClassFolder(new File(jaxwsRt, "rt/" + classesFolder));
+            if (new File(jaxwsRt, "rt-ha/" + classesFolder).exists()) {
+                runtime.addClassFolder(new File(jaxwsRt, "rt-ha/" + classesFolder));
+            }
+            runtime.addClassFolder(new File(jaxwsRt, "servlet/" + classesFolder));
+            runtime.addClassFolder(new File(jaxwsRt, "rt-fi/" + classesFolder));
+            runtime.addClassFolder(new File(jaxwsRt, "httpspi-servlet/" + classesFolder));
 
-                if (new File(jaxwsWs, "rt/" + classesFolder + "/META-INF/versions/9").exists()) {
-                    runtime.addClassFolder(new File(jaxwsWs, "rt/" + classesFolder + "/META-INF/versions/9"));
+            runtime.addClassFolder(new File(jaxwsWs, "extras/transports/local/" + classesFolder));
+
+            // this is needed for Localizer (which lives in jaxb-impl available to runtime) to find message resources of wsimport
+            runtime.addClassFolder(new File(jaxwsWs, "tools/wscompile/src/main/resources"));
+
+            //databinding plugins
+            if ("com.sun.xml.ws.db.toplink.JAXBContextFactory".equals(System.getProperty("BindingContextFactory"))) {
+                runtime.addClassFolder(new File(jaxwsWs, "extras/eclipselink_jaxb/" + classesFolder));
+            } else if ("com.sun.xml.ws.db.sdo.SDOContextFactory".equals(System.getProperty("BindingContextFactory"))) {
+                runtime.addClassFolder(new File(jaxwsWs, "extras/eclipselink_sdo/" + classesFolder));
+            }
+
+            if (new File(jaxwsWs, "tools/wscompile/" + classesFolder + "/META-INF/versions/9").exists()) {
+                tool.addClassFolder(new File(jaxwsWs, "tools/wscompile/" + classesFolder + "/META-INF/versions/9"));
+            }
+            tool.addClassFolder(new File(jaxwsWs, "tools/wscompile/" + classesFolder));
+
+            //now find libraries
+            File libDir = System.getProperty("libraries.dir") != null
+                    ? new File(System.getProperty("libraries.dir"))
+                    : new File(jaxwsWs, "bundles/jaxws-ri/target/stage/jaxws-ri/lib");
+            for (File lib : libDir.listFiles()) {
+                String name = lib.getName();
+                if (name.contains("jaxws-rt") || name.contains("jaxws-tools")) {
+                    continue;
                 }
-                runtime.addClassFolder(new File(jaxwsWs, "rt/" + classesFolder));
-                if (new File(jaxwsWs, "rt-ha/" + classesFolder).exists()) {
-                    runtime.addClassFolder(new File(jaxwsWs, "rt-ha/" + classesFolder));
-                }
-                runtime.addClassFolder(new File(jaxwsWs, "servlet/" + classesFolder));
-                runtime.addClassFolder(new File(jaxwsWs, "rt-fi/" + classesFolder));
-                runtime.addClassFolder(new File(jaxwsWs, "httpspi-servlet/" + classesFolder));
-
-                runtime.addClassFolder(new File(jaxwsWs, "transports/local/" + classesFolder));
-
-                // this is needed for Localizer (which lives in jaxb-impl available to runtime) to find message resources of wsimport
-                runtime.addClassFolder(new File(jaxwsWs, "tools/wscompile/src/main/resources"));
-
-                //databinding plugins
-                if ("com.sun.xml.ws.db.toplink.JAXBContextFactory".equals(System.getProperty("BindingContextFactory"))) {
-                    runtime.addClassFolder(new File(jaxwsWs, "eclipselink_jaxb/" + classesFolder));
-                } else if ("com.sun.xml.ws.db.sdo.SDOContextFactory".equals(System.getProperty("BindingContextFactory"))) {
-                    runtime.addClassFolder(new File(jaxwsWs, "eclipselink_sdo/" + classesFolder));
-                }
-
-                if (new File(jaxwsWs, "tools/wscompile/" + classesFolder + "/META-INF/versions/9").exists()) {
-                    tool.addClassFolder(new File(jaxwsWs, "tools/wscompile/" + classesFolder + "/META-INF/versions/9"));
-                }
-                tool.addClassFolder(new File(jaxwsWs, "tools/wscompile/" + classesFolder));
-
-                //now find libraries
-                File libDir = System.getProperty("libraries.dir") != null
-                        ? new File(System.getProperty("libraries.dir"))
-                        : new File(jaxwsWs, "bundles/jaxws-ri/target/stage/jaxws-ri/lib");
-                for (File lib : libDir.listFiles()) {
-                    String name = lib.getName();
-                    if (name.contains("jaxws-rt") || name.contains("jaxws-tools")) {
-                        continue;
-                    }
-                    //API jars should be already on cp (either in java.endorsed.dirs
-                    //or using -Xbootclasspath/p:) so not add them again
-                    if (name.contains("jaxb-api")
-                            || name.contains("jaxws-api")
-                            || name.contains("saaj-api")) {
-                        System.out.println("Ommitting: " + lib.getAbsolutePath());
-                        continue;
-                    }
-
-                    if (name.contains("jaxb-jxc") || name.contains("jaxb-xjc")) {
-                        tool.addJar(lib);
-                    } else {
-                        runtime.addJar(lib);
-                    }
-                }
-            } else if (new File(jaxwsWs, "rt/build/classes").exists()) {
-                System.out.println("WARNING: Ant based workspace...");
-                runtime.addClassFolder(new File(jaxwsWs, "rt/build/classes"));
-                File file = new File(jaxwsWs, "rt-ha/build/classes");
-                if (file.exists()) {            // rt-ha module may not be there
-                    runtime.addClassFolder(file);
-                }
-                runtime.addClassFolder(new File(jaxwsWs, "rt/src"));
-                runtime.addClassFolder(new File(jaxwsWs, "servlet/build/classes"));
-                runtime.addClassFolder(new File(jaxwsWs, "servlet/src"));
-                runtime.addClassFolder(new File(jaxwsWs, "rt-fi/build/classes"));
-                runtime.addClassFolder(new File(jaxwsWs, "transports/local/build/classes"));
-                runtime.addClassFolder(new File(jaxwsWs, "transports/local/src"));
-                tool.addClassFolder(new File(jaxwsWs, "tools/wscompile/build/classes"));
-                // this is needed for Localizer (which lives in runtime) to find message resources of wsimport
-                runtime.addClassFolder(new File(jaxwsWs, "tools/wscompile/src"));
-                tool.addJar(new File(jaxwsWs, "lib/jaxb-xjc.jar"));
-                runtime.addJarFolder(new File(jaxwsWs, "lib"), "jaxb-xjc.jar");
-                file = new File(jaxwsWs, "rt-ha/lib");
-                if (file.exists()) {            // rt-ha module may not be there
-                    runtime.addJarFolder(file);
+                if (name.contains("jaxb-jxc") || name.contains("jaxb-xjc")) {
+                    tool.addJar(lib);
+                } else {
+                    runtime.addJar(lib);
                 }
             }
 
@@ -589,11 +548,6 @@ public class Main {
         File toolsJar = new File(jreHome.getParent(), "lib/tools.jar");
         if (toolsJar.exists()) {
             tool.addJar(toolsJar);
-        }
-        // For Mac OS X
-        File classesJar = new File(jreHome.getParent(), "Classes/classes.jar");
-        if (classesJar.exists()) {
-            tool.addJar(classesJar);
         }
 
 

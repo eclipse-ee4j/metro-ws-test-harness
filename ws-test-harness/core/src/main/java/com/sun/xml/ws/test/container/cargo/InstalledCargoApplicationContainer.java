@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -124,7 +124,6 @@ public class InstalledCargoApplicationContainer extends AbstractRunnableCargoCon
         container.setOutput(containerWorkDir.getAbsolutePath() + File.separatorChar + "server.log");
 
         Map<String, String> props = new HashMap<String, String>();
-        props.put("java.endorsed.dirs", System.getProperty("java.endorsed.dirs"));
         props.put("WSIT_HOME", System.getProperty("WSIT_HOME"));
 //        props.put("com.sun.xml.ws.transport.local.LocalTransportTube.dump", "true");
 //        props.put("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");

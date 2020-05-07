@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -20,9 +20,6 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.aether.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
-import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -36,7 +33,6 @@ import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.archiver.manager.ArchiverManager;
 import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.cli.CommandLineException;
@@ -85,14 +81,14 @@ public class WSTestMojo extends AbstractMojo {
     /**
      * Version of Test Harness library to use for running tests.
      */
-    @Parameter(defaultValue = "2.4.0-SNAPSHOT")
+    @Parameter(defaultValue = "3.0.0")
     private String harnessVersion;
 
     /**
      * Specify the target JAX-WS version being tested. This determines test
      * exclusions.
      */
-    @Parameter(defaultValue = "2.3.2")
+    @Parameter(defaultValue = "3.0.0")
     private String version;
 
     /**
@@ -103,12 +99,6 @@ public class WSTestMojo extends AbstractMojo {
      */
     @Parameter(defaultValue = "${project.build.directory}/surefire-reports")
     private File resultsDirectory;
-
-    /**
-     * Endorsed directory for forked VM.
-     */
-    @Parameter
-    private File endorsedDir;
 
     /**
      * Find test directories recursively.
@@ -239,18 +229,9 @@ public class WSTestMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project.basedir}/misc")
     private File wsitConf;
 
-    @Parameter(readonly = true, defaultValue = "${localRepository}")
-    private ArtifactRepository localRepo;
-
     @Parameter(defaultValue = "${project.remoteProjectRepositories}",
             readonly = true)
     private List<RemoteRepository> remoteRepos;
-
-    @Parameter(readonly = true, defaultValue = "${project.pluginArtifactRepositories}")
-    private List<ArtifactRepository> pluginRepos;
-
-    @Component
-    private ArtifactFactory artifactFactory;
 
     @Parameter(defaultValue="${project}", readonly=true)
     private MavenProject project;
@@ -260,9 +241,6 @@ public class WSTestMojo extends AbstractMojo {
 
     @Component
     private ArchiverManager archiverManager;
-
-    @Component
-    private ArtifactMetadataSource mdataSource;
 
     /**
      * The entry point to Aether.
@@ -322,20 +300,6 @@ public class WSTestMojo extends AbstractMojo {
         // for more details, see: https://bz.apache.org/bugzilla/show_bug.cgi?id=62952
         // see also com.sun.xml.ws.test.Realm.getClassLoader()
         cmd.createArg().setLine("-Djdk.util.jar.enableMultiRelease=force");
-
-        //set API bootclasspath/endorsed
-        if (imageRoot != null && isEndorsedSupported()) {
-            File end = prepareEndorsed(imageRoot);
-            getLog().info("Setting endorsed directory to: " + end.getAbsolutePath());
-            cmd.createArg().setLine("-Djava.endorsed.dirs=" + end.getAbsolutePath());
-        } else if (endorsedDir != null && endorsedDir.isDirectory()) {
-            getLog().info("Setting endorsed directory to: " + endorsedDir.getAbsolutePath());
-            cmd.createArg().setValue("-Djava.endorsed.dirs=" + endorsedDir.getAbsolutePath());
-        } else {
-            if (isEndorsedSupported()) {
-                getLog().warn("Endorsed not applied. Set 'endorsedDir' in plugin's configuration.");
-            }
-        }
 
         if (extDir != null && extDir.exists() && extDir.isDirectory()) {
             cmd.createArg().setValue("-DHARNESS_EXT=" + extDir.getAbsolutePath());
@@ -454,7 +418,7 @@ public class WSTestMojo extends AbstractMojo {
         switch (transport) {
             case IN_VM:
                 if (imageRoot != null) {
-                    File transportFile = null;
+                    File transportFile;
                     try {
                         transportFile = download(new URL(transportUrl), imageFolder);
                     } catch (IOException ex) {
@@ -647,37 +611,26 @@ public class WSTestMojo extends AbstractMojo {
     private String getCP(File root, String... paths) {
         StringBuilder sb = new StringBuilder();
         for (String p : paths) {
-            sb.append(new File(root, p).getAbsolutePath());
+            File item = new File(root, p);
+            if (!item.exists()) {
+                getLog().warn(item.getAbsolutePath() + " does not exist");
+            } else {
+            sb.append(item.getAbsolutePath());
             sb.append(File.pathSeparatorChar);
+            }
         }
         return sb.substring(0, sb.length() - 1);
-    }
-
-    private File prepareEndorsed(File root) throws MojoExecutionException {
-        getLog().info("Preparing endorsed directory...");
-        File endorsed = new File(root.getParentFile(), "endorsed");
-        try {
-            if (isJaxWsRIRoot(root)) {
-                FileUtils.copyFileToDirectory(new File(root, "lib/javax.xml.soap-api.jar"), endorsed);
-                FileUtils.copyFileToDirectory(new File(root, "lib/jaxb-api.jar"), endorsed);
-                FileUtils.copyFileToDirectory(new File(root, "lib/jaxws-api.jar"), endorsed);
-                return endorsed;
-            } else if (isMetroRoot(root)) {
-                FileUtils.copyFileToDirectory(new File(root, "lib/webservices-api.jar"), endorsed);
-                return endorsed;
-            }
-        } catch (IOException ex) {
-            throw new MojoExecutionException("Error while preparing endorsed directory for " + imageRoot, ex);
-        }
-        throw new MojoExecutionException("Unknown/Unsupported image: " + imageRoot);
     }
 
     private String getToplinkCP(File root) throws MojoExecutionException {
         if (isJaxWsRIRoot(root)) {
             return getCP(root,
                     "lib/plugins/jaxws-eclipselink-plugin.jar",
-                    "lib/plugins/eclipselink.jar",
-                    "lib/plugins/mail.jar");
+                    "lib/plugins/org.eclipse.persistence.asm.jar",
+                    "lib/plugins/org.eclipse.persistence.core.jar",
+                    "lib/plugins/org.eclipse.persistence.moxy.jar",
+                    "lib/plugins/eclipselink.jar"
+            );
         } else if (isMetroRoot(root)) {
             return getCP(root, "lib/databinding/jaxws-eclipselink-plugin.jar") +
                     File.pathSeparatorChar +
@@ -690,11 +643,18 @@ public class WSTestMojo extends AbstractMojo {
         if (isJaxWsRIRoot(root)) {
             return getCP(root,
                     "lib/plugins/sdo-eclipselink-plugin.jar",
-                    "lib/plugins/eclipselink.jar");
+                    "lib/plugins/org.eclipse.persistence.asm.jar",
+                    "lib/plugins/org.eclipse.persistence.core.jar",
+                    "lib/plugins/org.eclipse.persistence.moxy.jar",
+                    "lib/plugins/org.eclipse.persistence.sdo.jar",
+                    "lib/plugins/eclipselink.jar"
+            );
         } else if (isMetroRoot(root)) {
             return getCP(root, "lib/databinding/sdo-eclipselink-plugin.jar") +
                     File.pathSeparatorChar +
-                    getCP(new File(project.getBuild().getDirectory()), "test-lib/eclipselink.jar");
+                    getCP(new File(project.getBuild().getDirectory()),
+                            "test-lib/eclipselink.jar"
+                            );
         }
         throw new MojoExecutionException("Unknown/Unsupported image: " + imageRoot);
     }
@@ -722,16 +682,6 @@ public class WSTestMojo extends AbstractMojo {
             return sb.toString();
         }
         return null;
-    }
-
-    private boolean isEndorsedSupported() {
-        String s = System.getProperty("java.version");
-        try {
-            int i = Integer.parseInt(s.substring(0, s.indexOf(".")));
-            return i < 10;
-        } catch (Throwable t) {
-            return false;
-        }
     }
 
 }
