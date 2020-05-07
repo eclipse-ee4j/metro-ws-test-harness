@@ -17,13 +17,13 @@
     <parent>
         <groupId>org.glassfish.metro</groupId>
         <artifactId>ws-test-framework</artifactId>
-        <version>3.0.0-M1</version>
+        <version>3.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.glassfish.metro</groupId>
     <artifactId>harness-maven-plugin</artifactId>
-    <version>3.0.0-M1</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <name>WS Test Harness Maven Plugin</name>
     <url>http://ws-test-harness.java.net/</url>
