@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -106,6 +106,15 @@ public abstract class AbstractApplicationContainer implements ApplicationContain
 
             PrintWriter w = new PrintWriter(new FileWriter(new File(war.root, "index.html")));
             w.println("<html><body>Deployed by the JAX-WS test harness</body></html>");
+            w.close();
+
+            // we only need this for embedded Tomcat, but it's harmless to generate for other containers.
+            // TODO: figure out how not to do this for other containers
+            File metainf = new File(war.root,"META-INF");
+            metainf.mkdirs();
+            w = new PrintWriter(new FileWriter(new File(metainf, "context.xml")));
+            //avoid default scanning of Class-Path in manifest to get rif of warnings during test run
+            w.println("<Context><JarScanner scanManifest=\"false\"/></Context>");
             w.close();
         }
         //Package Handler Configuration files

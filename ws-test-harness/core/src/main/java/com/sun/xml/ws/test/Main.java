@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -397,17 +397,8 @@ public class Main {
 
         // fill in runtime and tool realms
         if (wsitImage != null) {
-            File apiJar = new File(wsitImage, "lib/webservices-api.jar");
-            runtime.addJar(apiJar);
-
-            File rtJar = new File(wsitImage, "lib/webservices-rt.jar");
-            runtime.addJar(rtJar);
-
-            File toolJar = new File(wsitImage, "lib/webservices-tools.jar");
-            tool.addJar(toolJar);
-
-            File extraJar = new File(wsitImage, "lib/webservices-extra.jar");
-            runtime.addJar(extraJar);
+            runtime.addJarFolder(new File(wsitImage, "lib"), "webservices-tools.jar");
+            tool.addJar(new File(wsitImage, "lib/webservices-tools.jar"));
 
             containerClasspathPrefix = new File[4];
             //TODO: FIX ME!?
@@ -652,21 +643,20 @@ public class Main {
             System.err.println("\tImplementation version " + tv.getImplVersion());
             appContainer = new InstalledCargoApplicationContainer(
                     wsimport, wsgen, tv.getId(), tomcat, port, httpspi);
-            if (!tv.supports("servlet30")) {
-                appContainer.getUnsupportedUses().add("servlet30");
-            }
+            appContainer.getUnsupportedUses().add("skip-tomcat");
         }
 
         if (embeddedTomcat != null) {
+            TomcatVersion tv = getTomcatVersion(embeddedTomcat);
             appContainer = new EmbeddedCargoApplicationContainer(
-                    wsimport, wsgen, "tomcat10x", port, httpspi);
-            appContainer.getUnsupportedUses().add("servlet30");
+                    wsimport, wsgen, tv.getId(), port, httpspi);
+            appContainer.getUnsupportedUses().add("skip-embeddedTomcat");
         }
 
         if (embeddedJetty != null) {
             appContainer = new EmbeddedCargoApplicationContainer(
-                    wsimport, wsgen, "jetty6x", port, httpspi);
-            appContainer.getUnsupportedUses().add("servlet30");
+                    wsimport, wsgen, "jetty11x", port, httpspi);
+            appContainer.getUnsupportedUses().add("skip-jetty");
         }
 
         if (remoteTomcat != null) {
@@ -687,7 +677,7 @@ public class Main {
                     defaultsTo(matcher.group(3), "admin"),
                     httpspi
             );
-            appContainer.getUnsupportedUses().add("servlet30");
+            appContainer.getUnsupportedUses().add("skip-tomcat");
         }
 
         if (localGlassfish != null) {
@@ -946,7 +936,7 @@ public class Main {
                     tv.addFeature("servlet40");
                     break;
                 default:
-                    Logger.getLogger(Main.class.getName()).log(Level.WARNING, "Unrecognized Tomcat version: {0}.{1}", new Object[]{specVersion, implVersion});
+                    Logger.getLogger(Main.class.getName()).log(Level.WARNING, "Unrecognized Tomcat version: spec {0}, impl {1}", new Object[]{specVersion, implVersion});
                     Logger.getLogger(Main.class.getName()).log(Level.WARNING, "Using default tomcat10x...");
                     tv.setId("tomcat10x");
                     tv.addFeature("servlet30");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -35,6 +35,11 @@ final class CargoApplication extends AbstractHttpApplication {
 
     public void undeploy() throws Exception {
         System.out.println("Undeploying a service");
-        deployer.undeploy(war);
+        try {
+            deployer.undeploy(war);
+        } catch (Exception e) {
+            // only log failures for undeploy in embedded mode
+            System.out.println("Failed to undeploy a service");
+        }
     }
 }
