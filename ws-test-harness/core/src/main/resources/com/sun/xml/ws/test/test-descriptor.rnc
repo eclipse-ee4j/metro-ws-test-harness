@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018, 2019 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2018, 2022 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -39,7 +39,7 @@ start = element descriptor {
     # See also 'client' element's 'transport' description.
     attribute transport {"http"|"local"|"in-vm"|"lwhs"}? &
 
-    attribute uses { list { ("servlet30"|"servlet"|"ri"|"multi-endpoint"|"skip-lwhs")+ } }? &
+    attribute uses { list { ("servlet30"|"servlet"|"ri"|"multi-endpoint"|"skip-lwhs"|"skip-tomcat"|"skip-jetty"|"skip-embeddedTomcat")+ } }? &
 
     # optional flag to force test to be skipped
     # to be used only in cases such as when the harness itself

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -158,8 +158,6 @@ public class WSTestMojo extends AbstractMojo {
     /**
      * Used when running without pom.xml on the command line.
      * Comma (',') is used as a separator.
-     *
-     * @parameter
      */
     @Parameter(property = "args")
     private List<String> args;

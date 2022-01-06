@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -34,16 +34,24 @@
 
     <dependencies>
         <dependency>
-          <groupId>com.sun.activation</groupId>
-          <artifactId>jakarta.activation</artifactId>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.mail</groupId>
+            <artifactId>jakarta.mail-api</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.xml.ws</groupId>
             <artifactId>jakarta.xml.ws-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.jws</groupId>
-            <artifactId>jakarta.jws-api</artifactId>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>angus-activation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>angus-mail</artifactId>
         </dependency>
         <dependency>
             <groupId>com.sun.istack</groupId>
@@ -154,8 +162,7 @@
 
                         <java classname="com.sun.xml.ws.test.Main" fork="true" classpathref="maven.test.classpath" failonerror="true">
                             <jvmarg line="${harness.extra.jvm.arg} ${harness.extra.jvm.arg.internal} -Dign=nn"/>
-                            <!--<jvmarg line="-Djava.endorsed.dirs=${basedir}/target/endorsed" />-->
-                            <!--<jvmarg line="- -upgrade-module-path=${basedir}/target/endorsed ${harness.extra.jvm.arg}" />-->
+                            <!--<jvmarg line="${harness.extra.jvm.arg}" />-->
                             <!--<jvmarg line="-Dharness.deploy.timeout=60000 -Dharness.useSSL=true -Dharness.ssl.home=${project.basedir}/src/test/certs" />-->
                             <!--<jvmarg line="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=6000" />-->
                             <arg line="${image}" />
@@ -173,6 +180,7 @@
 
 <!--                            <arg value="-tomcat-remote" />
                             <arg value="localhost" />-->
+<!--                            <arg value="-debug" />-->
 
                             <arg value="-transport" />
                             <arg path="target/transport/jaxws-local-transport.jar" />

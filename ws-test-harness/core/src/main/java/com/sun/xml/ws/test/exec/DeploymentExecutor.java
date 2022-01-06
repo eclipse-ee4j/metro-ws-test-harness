@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -163,7 +163,7 @@ public class DeploymentExecutor extends Executor {
             classpath.add(context.getResources().toURL());
         }
 
-        /**
+        /*
          * If there is a service like STS it has already been added to context.parent.clientClassLoader
          *  add that to the final classpath
          */
@@ -247,7 +247,7 @@ public class DeploymentExecutor extends Executor {
         }
     }
 
-    /**
+    /*
      * Generates a JAX-WS customization file for generating client artifacts.
      */
     //private File genClientCustomizationFile(DeployedService service) throws Exception {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -12,10 +12,6 @@ package com.sun.xml.ws.test.model;
 
 import com.sun.istack.NotNull;
 import com.sun.istack.test.VersionProcessor;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A test script that plays the role of the client.
