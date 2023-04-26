@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.8</version>
         <relativePath/>
     </parent>
 
@@ -74,17 +74,21 @@
         <copyright.template>${project.build.commonResourcesDirectory}/config/copyright.txt</copyright.template>
         <copyright.update>false</copyright.update>
 
-        <jakarta.xml.bind-api.version>4.0.0-RC3</jakarta.xml.bind-api.version>
-        <jakarta.xml.soap-api.version>3.0.0-RC2</jakarta.xml.soap-api.version>
-        <jakarta.xml.ws-api.version>4.0.0-RC2</jakarta.xml.ws-api.version>
-        <jakarta.activation-api.version>2.1.0</jakarta.activation-api.version>
-        <jakarta.mail-api.version>2.1.0</jakarta.mail-api.version>
-        <angus.activation.version>1.0.0</angus.activation.version>
-        <angus.mail.version>1.0.0-M2</angus.mail.version>
-        <istack-commons.version>4.1.0-M1</istack-commons.version>
-        <metro.version>4.0.0-M1</metro.version>
+        <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
+        <jakarta.xml.soap-api.version>3.0.0</jakarta.xml.soap-api.version>
+        <jakarta.xml.ws-api.version>4.0.0</jakarta.xml.ws-api.version>
+        <jakarta.activation-api.version>2.1.1</jakarta.activation-api.version>
+        <jakarta.mail-api.version>2.1.1</jakarta.mail-api.version>
+        <angus.activation.version>2.0.0</angus.activation.version>
+        <angus.mail.version>2.0.1</angus.mail.version>
+        <istack-commons.version>4.1.2</istack-commons.version>
+        <metro.version>4.0.0</metro.version>
         <jaxws-ri.version>3.0.1</jaxws-ri.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+        <maven.compiler.release>8</maven.compiler.release>
+        <maven.compiler.testRelease>${maven.compiler.release}</maven.compiler.testRelease>
     </properties>
 
     <modules>
@@ -154,33 +158,33 @@
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-plugin-api</artifactId>
-                <version>3.5.4</version>
+                <version>3.9.1</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-core</artifactId>
-                <version>3.5.4</version>
+                <version>3.9.1</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.plexus</groupId>
                 <artifactId>plexus-archiver</artifactId>
-                <version>3.5</version>
+                <version>3.7.0</version>
             </dependency>
             <!-- CQ: 17829 -->
             <dependency>
                 <groupId>org.apache.maven.plugin-tools</groupId>
                 <artifactId>maven-plugin-annotations</artifactId>
-                <version>3.5</version>
+                <version>3.8.2</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant</artifactId>
-                <version>1.10.12</version>
+                <version>1.10.13</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant-junit</artifactId>
-                <version>1.10.12</version>
+                <version>1.10.13</version>
             </dependency>
             <dependency>
                 <groupId>args4j</groupId>
@@ -196,7 +200,7 @@
             <dependency>
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-core-uberjar</artifactId>
-                <version>1.9.9</version>
+                <version>1.10.6</version>
                 <exclusions>
                     <exclusion>
                         <groupId>*</groupId>
@@ -231,7 +235,7 @@
             <dependency>
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
-                <version>2.3.28</version>
+                <version>2.3.32</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -243,59 +247,59 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.1.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
                     <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.1.0</version>
                     <dependencies>
                         <dependency>
                             <groupId>org.apache.ant</groupId>
                             <artifactId>ant</artifactId>
-                            <version>1.10.12</version>
+                            <version>1.10.13</version>
                         </dependency>
                         <dependency>
                             <groupId>org.apache.ant</groupId>
                             <artifactId>ant-junit</artifactId>
-                            <version>1.10.12</version>
+                            <version>1.10.13</version>
                         </dependency>
                     </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.11.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-plugin-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>3.8.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.7.1</version>
+                    <version>3.12.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.6</version>
+                    <version>3.0.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -305,8 +309,9 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.5.0</version>
                     <configuration>
+                        <doclint>-missing</doclint>
                         <detectJavaApiLink>false</detectJavaApiLink>
                         <detectOfflineLinks>false</detectOfflineLinks>
                     </configuration>
@@ -314,12 +319,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.0.0-M2</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
@@ -335,6 +340,27 @@
                         <!-- check that year is correct -->
                         <ignoreYear>${copyright.ignoreyear}</ignoreYear>
                         <quiet>false</quiet>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>2.15.0</version>
+                    <configuration>
+                        <ruleSet>
+                            <rules>
+                                <rule>
+                                    <!-- 4.2.0+ comes with no SecurityManager support -->
+                                    <groupId>com.sun.istack</groupId>
+                                    <ignoreVersions>
+                                        <ignoreVersion>
+                                            <type>regex</type>
+                                            <version>4.[2-9]+.*</version>
+                                        </ignoreVersion>
+                                    </ignoreVersions>
+                                </rule>
+                            </rules>
+                        </ruleSet>
                     </configuration>
                 </plugin>
             </plugins>

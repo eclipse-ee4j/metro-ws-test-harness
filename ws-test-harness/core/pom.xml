@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -161,6 +161,7 @@
                         <delete dir="target/surefire-reports" />
 
                         <java classname="com.sun.xml.ws.test.Main" fork="true" classpathref="maven.test.classpath" failonerror="true">
+                            <jvmarg line="--add-exports java.desktop/com.sun.imageio.plugins.jpeg=ALL-UNNAMED"/>
                             <jvmarg line="${harness.extra.jvm.arg} ${harness.extra.jvm.arg.internal} -Dign=nn"/>
                             <!--<jvmarg line="${harness.extra.jvm.arg}" />-->
                             <!--<jvmarg line="-Dharness.deploy.timeout=60000 -Dharness.useSSL=true -Dharness.ssl.home=${project.basedir}/src/test/certs" />-->
