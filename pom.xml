@@ -77,17 +77,18 @@
         <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
         <jakarta.xml.soap-api.version>3.0.0</jakarta.xml.soap-api.version>
         <jakarta.xml.ws-api.version>4.0.0</jakarta.xml.ws-api.version>
-        <jakarta.activation-api.version>2.1.1</jakarta.activation-api.version>
-        <jakarta.mail-api.version>2.1.1</jakarta.mail-api.version>
-        <angus.activation.version>2.0.0</angus.activation.version>
-        <angus.mail.version>2.0.1</angus.mail.version>
+        <jakarta.activation-api.version>2.1.2</jakarta.activation-api.version>
+        <jakarta.mail-api.version>2.1.2</jakarta.mail-api.version>
+        <angus.activation.version>2.0.1</angus.activation.version>
+        <angus.mail.version>2.0.2</angus.mail.version>
         <istack-commons.version>4.1.2</istack-commons.version>
         <metro.version>4.0.0</metro.version>
-        <jaxws-ri.version>3.0.1</jaxws-ri.version>
+        <jaxws-ri.version>4.0.1</jaxws-ri.version>
+        <saaj-impl.version>3.0.2</saaj-impl.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-        <maven.compiler.release>8</maven.compiler.release>
+        <maven.compiler.release>11</maven.compiler.release>
         <maven.compiler.testRelease>${maven.compiler.release}</maven.compiler.testRelease>
     </properties>
 
@@ -130,6 +131,11 @@
                 <version>${angus.mail.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.sun.xml.messaging.saaj</groupId>
+                <artifactId>saaj-impl</artifactId>
+                <version>${saaj-impl.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.glassfish.metro</groupId>
                 <artifactId>harness-bootstrap</artifactId>
                 <version>${project.version}</version>
@@ -158,12 +164,12 @@
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-plugin-api</artifactId>
-                <version>3.9.1</version>
+                <version>3.9.5</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-core</artifactId>
-                <version>3.9.1</version>
+                <version>3.9.5</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.plexus</groupId>
@@ -174,17 +180,17 @@
             <dependency>
                 <groupId>org.apache.maven.plugin-tools</groupId>
                 <artifactId>maven-plugin-annotations</artifactId>
-                <version>3.8.2</version>
+                <version>3.9.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant</artifactId>
-                <version>1.10.13</version>
+                <version>1.10.14</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant-junit</artifactId>
-                <version>1.10.13</version>
+                <version>1.10.14</version>
             </dependency>
             <dependency>
                 <groupId>args4j</groupId>
@@ -200,7 +206,7 @@
             <dependency>
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-core-uberjar</artifactId>
-                <version>1.10.6</version>
+                <version>1.10.10</version>
                 <exclusions>
                     <exclusion>
                         <groupId>*</groupId>
@@ -247,17 +253,17 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -267,12 +273,12 @@
                         <dependency>
                             <groupId>org.apache.ant</groupId>
                             <artifactId>ant</artifactId>
-                            <version>1.10.13</version>
+                            <version>1.10.14</version>
                         </dependency>
                         <dependency>
                             <groupId>org.apache.ant</groupId>
                             <artifactId>ant-junit</artifactId>
-                            <version>1.10.13</version>
+                            <version>1.10.14</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -289,17 +295,17 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-plugin-plugin</artifactId>
-                    <version>3.8.2</version>
+                    <version>3.9.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.12.1</version>
+                    <version>4.0.0-M10</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -309,7 +315,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                     <configuration>
                         <doclint>-missing</doclint>
                         <detectJavaApiLink>false</detectJavaApiLink>
@@ -319,12 +325,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.4.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
@@ -345,7 +351,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.15.0</version>
+                    <version>2.16.1</version>
                     <configuration>
                         <ruleSet>
                             <rules>
