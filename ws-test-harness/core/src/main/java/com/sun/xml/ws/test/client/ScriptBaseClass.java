@@ -17,6 +17,7 @@ import com.sun.xml.ws.test.model.TestClient;
 import com.sun.xml.ws.test.model.TestDescriptor;
 import junit.framework.Assert;
 
+import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -126,6 +127,13 @@ public class ScriptBaseClass extends Assert {
 
     public static Node createDOMNode(InputStream inputStream) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        String FEATURE = "http://apache.org/xml/features/disallow-doctype-decl";
+        try {
+            dbf.setFeature(FEATURE, true);
+        } catch (ParserConfigurationException e) {
+            throw new IllegalStateException("ParserConfigurationException was thrown. The feature '"
+                + FEATURE + "' is not supported by your XML processor.", e);
+        }
         dbf.setNamespaceAware(true);
         dbf.setValidating(false);
         DocumentBuilder builder = dbf.newDocumentBuilder();
@@ -134,6 +142,9 @@ public class ScriptBaseClass extends Assert {
 
     public String sourceToXMLString(Source result) throws TransformerException {
         TransformerFactory factory = TransformerFactory.newInstance();
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         Transformer transformer = factory.newTransformer();
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         transformer.setOutputProperty(OutputKeys.METHOD, "xml");

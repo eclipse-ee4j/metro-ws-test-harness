@@ -16,6 +16,7 @@ import java.net.ServerSocket;
 import org.codehaus.cargo.container.LocalContainer;
 
 import java.net.URL;
+import java.security.SecureRandom;
 import java.util.Random;
 
 /**
@@ -71,7 +72,7 @@ abstract class AbstractRunnableCargoContainer<C extends LocalContainer> extends 
     public static int getFreePort() {
         // set TCP port to somewhere between 20000-60000
         for (int i = 0; i < 10; i++) {
-            int p = findFreePort(new Random().nextInt(40000) + 20000);
+            int p = findFreePort(new SecureRandom().nextInt(40000) + 20000);
             if (p > 0) {
                 return p;
             }
