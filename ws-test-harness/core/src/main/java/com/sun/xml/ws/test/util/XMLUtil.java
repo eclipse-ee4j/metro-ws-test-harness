@@ -17,6 +17,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -56,6 +58,13 @@ public final class XMLUtil {
 
     public static Document readXML(File f, URL schemaUrl) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        String FEATURE = "http://apache.org/xml/features/disallow-doctype-decl";
+        try {
+            factory.setFeature(FEATURE, true);
+        } catch (ParserConfigurationException e) {
+            throw new IllegalStateException("ParserConfigurationException was thrown. The feature '"
+                + FEATURE + "' is not supported by your XML processor.", e);
+        }
         if (schemaUrl != null) {
             String ef = schemaUrl.toExternalForm();
             if (!ef.equalsIgnoreCase(url)) {
@@ -78,6 +87,9 @@ public final class XMLUtil {
 
     public static void writeXML(Document doc, OutputStream os) throws TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+        transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource(doc);
         StreamResult result = new StreamResult(os);

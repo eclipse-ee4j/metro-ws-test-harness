@@ -18,6 +18,7 @@ import org.apache.tools.ant.types.FileSet;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -138,9 +139,7 @@ public class FileUtil {
         if (targetFolder.exists()) {
             dir = targetFolder;
         }
-        File tmpFile = File.createTempFile("wstest", "tmp", dir);
-        tmpFile.delete();
-        tmpFile.mkdir();
+        File tmpFile = Files.createTempDirectory(dir.toPath(), "wstest" + "tmp").toFile();
         if(scheduleDeleteOnVmExit) {
             tmpFile.deleteOnExit();
         }

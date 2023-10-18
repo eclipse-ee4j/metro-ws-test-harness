@@ -10,6 +10,8 @@
 package com.sun.xml.ws.test.client;
 
 import java.io.StringWriter;
+
+import javax.xml.XMLConstants;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -32,6 +34,9 @@ public class InlineXmlResource extends AbstractXmlResource {
 
     public String asString() throws Exception {
         TransformerFactory transFactory = TransformerFactory.newInstance();
+        transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        transFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+        transFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         Transformer transformer = transFactory.newTransformer();
         StringWriter sw = new StringWriter();
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
